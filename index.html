@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FI AI Projects Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e293b;padding:16px;max-width:1200px;margin:0 auto}
+.hdr{background:linear-gradient(135deg,#1e293b,#334155);border-radius:12px;padding:24px 32px;margin-bottom:20px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.hdr h1{font-size:24px;font-weight:700}
+.hdr p{opacity:.8;font-size:14px;margin-top:4px}
+.hdr-actions{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
+.btn-white{background:rgba(255,255,255,.15);color:#fff;backdrop-filter:blur(4px)}
+.btn-white:hover{background:rgba(255,255,255,.25)}
+.btn-primary{background:#6366f1;color:#fff}
+.btn-primary:hover{background:#4f46e5}
+.btn-outline{background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:all .2s}
+.tab.active{background:#6366f1;color:#fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.stat{background:#fff;border-radius:10px;padding:16px 20px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.stat-n{font-size:28px;font-weight:700}
+.stat-l{font-size:13px;color:#64748b;margin-top:2px}
+.green{color:#16a34a}.yellow{color:#d97706}.gray{color:#6b7280}.purple{color:#7e22ce}
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:20px;padding:24px;overflow:hidden}
+.pri-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.pri-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;cursor:pointer;background:#f1f5f9;border:2px solid transparent;flex:1 1 auto;min-width:120px;transition:all .2s}
+.pri-item:hover,.pri-item.act{background:#e0e7ff;border-color:#6366f1}
+.pri-num{background:#e2e8f0;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#475569;flex-shrink:0}
+.pri-name{font-size:12px;font-weight:600;color:#1e293b}
+.pri-label{font-size:10px;color:#64748b}
+.rationale{background:#fefce8;border-radius:8px;padding:16px;font-size:13px;line-height:1.6;color:#713f12}
+.pc{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:16px;border:2px solid transparent;transition:all .2s}
+.pc.act{box-shadow:0 4px 12px rgba(99,102,241,.2);border-color:#6366f1}
+.pc-hdr{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.pc-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.pc-icon{font-size:20px;flex-shrink:0}
+.pc-info{min-width:0;flex:1}
+.pc-title{font-weight:600;font-size:16px}
+.pc-desc{font-size:13px;color:#64748b;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc-badges{display:flex;gap:8px;align-items:center;flex-shrink:0;margin-left:12px;flex-wrap:wrap}
+.badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;white-space:nowrap}
+.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}.bb{background:#dbeafe;color:#1e40af}
+.bp{background:#f3e8ff;color:#7e22ce}.bo{background:#ffedd5;color:#9a3412}.br{background:#fee2e2;color:#991b1b}
+.bgr{background:#f1f5f9;color:#475569}
+.progress-bar{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin:8px 0}
+.progress-fill{height:100%;border-radius:3px;transition:width .3s}
+.progress-text{font-size:11px;color:#64748b;text-align:right}
+.arrow{font-size:18px;color:#94a3b8;transition:transform .2s;margin-left:8px}
+.arrow.open{transform:rotate(180deg)}
+.pc-det{padding:0 20px 20px;border-top:1px solid #f1f5f9;display:none}
+.pc-det.open{display:block}
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.det-lbl{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;margin-bottom:4px}
+.det-val{font-size:13px;color:#334155;line-height:1.5}
+.det-val.red{color:#dc2626}
+.sop-box{margin-top:16px;background:#f0fdf4;border-radius:8px;padding:14px;border:1px solid #bbf7d0}
+.sop-box.pur{background:#faf5ff;border:2px solid #c084fc}
+.sop-lbl{font-size:11px;font-weight:600;color:#166534;text-transform:uppercase;margin-bottom:4px}
+.sop-box.pur .sop-lbl{color:#7e22ce}
+.steps{margin-top:16px}
+.steps-title{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;margin-bottom:8px}
+.step{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f8fafc;font-size:13px;color:#334155;transition:all .2s}
+.step:last-child{border:none}
+.step.done .step-text{text-decoration:line-through;color:#94a3b8}
+.step input[type=checkbox]{width:18px;height:18px;accent-color:#6366f1;cursor:pointer;flex-shrink:0;margin-top:1px}
+.step-text{flex:1;line-height:1.4}
+.notes-section{margin-top:16px;background:#f8fafc;border-radius:8px;padding:14px;border:1px solid #e2e8f0}
+.notes-title{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.notes-area{width:100%;min-height:80px;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-size:13px;font-family:inherit;color:#334155;resize:vertical;background:#fff;transition:border-color .2s}
+.notes-area:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.1)}
+.notes-saved{font-size:11px;color:#16a34a;margin-top:4px;opacity:0;transition:opacity .3s}
+.notes-saved.show{opacity:1}
+.add-step{margin-top:8px;display:flex;gap:8px}
+.add-step input{flex:1;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit}
+.add-step input:focus{outline:none;border-color:#6366f1}
+.add-step button{padding:8px 16px;background:#6366f1;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}
+.dep-map{font-size:13px;line-height:2.2;color:#334155;font-family:monospace}
+.dep-hl{color:#7e22ce;font-weight:600}
+.hidden{display:none}
+.sop-sheet{display:flex;align-items:center;gap:16px;padding:14px 18px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:12px}
+.sop-ct{background:#e0e7ff;color:#4338ca;border-radius:8px;padding:6px 12px;font-weight:700;font-size:18px;min-width:48px;text-align:center}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.mb{padding:16px;border-radius:8px;font-size:13px;line-height:1.8}
+.mb h4{font-weight:700;margin-bottom:8px;font-size:14px}
+.m1{background:#f0fdf4;border:1px solid #bbf7d0}.m1 h4{color:#166534}
+.m2{background:#eff6ff;border:1px solid #bfdbfe}.m2 h4{color:#1e40af}
+.m3{background:#faf5ff;border:2px solid #c084fc}.m3 h4{color:#7e22ce}
+.m4{background:#fefce8;border:1px solid #fef08a}.m4 h4{color:#854d0e}
+.m5{background:#fff1f2;border:1px solid #fecdd3}.m5 h4{color:#9f1239}
+.m6{background:#f1f5f9;border:1px solid #cbd5e1}.m6 h4{color:#475569}
+.toast{position:fixed;bottom:24px;right:24px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transform:translateY(10px);transition:all .3s;z-index:100;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;font-size:12px;font-weight:600;cursor:pointer;color:#64748b;transition:all .2s}
+.filter-btn.active{background:#6366f1;color:#fff;border-color:#6366f1}
+.last-saved{font-size:11px;color:#64748b;margin-top:4px}
+@media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr)}.det-grid,.mg{grid-template-columns:1fr}.pc-badges{flex-wrap:wrap}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div><h1>🤖 FI AI Projects Dashboard</h1><p>Fraud Investigations & Risk Assessment — 9 Projects | SOP House Integrated</p><div class="last-saved" id="lastSaved"></div></div>
+  <div class="hdr-actions">
+    <button class="btn btn-white" onclick="exportData()">📥 Export JSON</button>
+    <button class="btn btn-white" onclick="document.getElementById('importFile').click()">📤 Import JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" id="tab-btn-projects" onclick="switchTab('projects')">📋 Projects & Priority</button>
+  <button class="tab" id="tab-btn-sop" onclick="switchTab('sop')">📚 SOP House Overview</button>
+</div>
+
+<div id="tab-projects">
+  <div class="stats">
+    <div class="stat"><div class="stat-n green" id="s-live">1</div><div class="stat-l">✅ Live</div></div>
+    <div class="stat"><div class="stat-n yellow" id="s-prog">3</div><div class="stat-l">In Progress</div></div>
+    <div class="stat"><div class="stat-n gray" id="s-not">5</div><div class="stat-l">Not Started</div></div>
+    <div class="stat"><div class="stat-n purple" id="s-pct">0%</div><div class="stat-l">Overall Steps Done</div></div>
+  </div>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('live',this)">✅ Live</button>
+    <button class="filter-btn" onclick="setFilter('progress',this)">🔨 In Progress</button>
+    <button class="filter-btn" onclick="setFilter('notstarted',this)">⬜ Not Started</button>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-bottom:16px;font-size:18px;font-weight:600">📋 Recommended Priority Order</h2>
+    <div class="pri-bar" id="priBar"></div>
+    <div class="rationale"><strong>Prioritization Rationale:</strong> SF Ticket Assigner is live ✅. UAR Agent is P0 — most developed (17 PRs, full SOP) with 30-60 min savings per report. Bank Email Agent is P1 due to 24hr bank SLA pressure. ATO Doc Sub Agent is P1 — Doris & Pinkham actively building 3-output doc pipeline. FI GPT is P2 — standalone knowledge base for all 72+ SOPs. Risk Alert/USR Tracker is P2 for agent accuracy validation. QC agents depend on parent tools being live. Legal Report Update needs scoping.</div>
+  </div>
+
+  <div id="projectCards"></div>
+
+  <div class="card">
+    <h2 style="margin-bottom:16px;font-size:18px;font-weight:600">🔗 Dependency Map</h2>
+    <div class="dep-map">
+      SF Ticket Assigner (✅ Live) ───→ <strong>Salesforce QC Agent</strong><br>
+      UAR Agent (In Dev) ───→ <strong>UAR QC Agent</strong><br>
+      Bank Email Agent (Draft) ───→ uses FraudPaymentReview + SessionsInvestigation agents<br>
+      ATO Doc Sub Agent (In Progress) ───→ Panda ATO Report + SAR + ATOMs Slack<br>
+      FI GPT (Not Started) ───→ Ingests ALL 72+ SOP docs ───→ Team knowledge base<br>
+      <span class="dep-hl">&nbsp;&nbsp;└─→ Can inform: UAR QC, SFDC QC, Risk Alert Tracker, onboarding</span><br>
+      USR Agent + Investigations Agent ───→ <strong>Risk Alert / USR Tracker for QC</strong><br>
+      Legal Report Update ───→ <em>Needs scoping (possibly LOIs/referrals)</em>
+    </div>
+  </div>
+</div>
+
+<div id="tab-sop" class="hidden">
+  <div class="card">
+    <h2 style="margin-bottom:4px;font-size:18px;font-weight:600">FI's Procedures, Desktop Guides, and Templates</h2>
+    <p style="margin-bottom:16px;font-size:13px;color:#64748b">7 sheets — your team's operational knowledge base</p>
+    <div id="sopSheets"></div>
+  </div>
+  <div class="card">
+    <h2 style="margin-bottom:16px;font-size:18px;font-weight:600">🔗 SOP → AI Project Mapping</h2>
+    <div class="mg">
+      <div class="mb m1"><h4>UAR Agent touches:</h4>• 11 UAR templates (all fraud types)<br>• UAR Desktop Guide + Reconciliation Guide<br>• UAR Scorecards (Standard + Experienced)<br>• Exposure Calculation workbook<br>• FY26 UAR tracker (Quick Links)</div>
+      <div class="mb m2"><h4>Bank Email Agent touches:</h4>• Bank Emails Desktop Guide<br>• Bank Email Scorecard<br>• ACH Response Macros<br>• Bank Email Tracker (Quick Links)<br>• Banking Contacts (Quick Links)<br>• Gumloop extraction macro (AI Tooling)</div>
+      <div class="mb m3"><h4>🟣 FI GPT — USES ENTIRE SOP HOUSE:</h4>• ALL 18 templates<br>• ALL 11 communication macros<br>• ALL 15 desktop guides<br>• ALL 13 master scorecards<br>• Both procedures (QC + Investigations)<br>• ALL 6 quick links + ALL 7 AI tooling entries<br><em style="font-size:11px;color:#7e22ce">72+ documents — the team's AI brain</em></div>
+      <div class="mb m4"><h4>Risk Alert / USR Tracker for QC:</h4>• Slack Channel Review DG + Scorecard<br>• USR Desktop Guide [WIP]<br>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• FI Investigations Procedure</div>
+      <div class="mb m5"><h4>QC Agents (UAR + SFDC):</h4>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• Every Desktop Guide (QC criteria)<br>• FI Investigations Procedure</div>
+      <div class="mb m6"><h4>Legal Report Update may touch:</h4>• LOI Templates (Chase/PNC + DocuSign)<br>• LOI Scorecard<br>• AML/EDD Internal Referral templates<br>• Referral fraud detection report</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const P = [
+  {id:"sf-assigner",n:"Salesforce Ticket Assigner",st:"✅ Live",stb:"bg",pri:"Shipped",prib:"bg",ic:"✅",cat:"live",tm:"Risk Investigation (Doris)",pl:"Gumloop",llm:"N/A (rule-based)",ds:"Automated round-robin ticket assignment for Salesforce Risk Investigation queue. Google Sheets for availability/state, Slack notifications.",im:"Medium — Eliminates manual assignment, fair workload distribution",bl:"None — operational",dp:"Salesforce OAuth, Google Sheets, Slack",doc:"Tech spec complete, production validated",met:"Tickets/analyst, response times, queue depth",cx:"Small (Gumloop no-code flow)",sop:"✅ Listed in AI Tooling sheet. Gumloop flow link tracked.",pur:false,steps:["Phase 2: Handle no available analysts fallback","Monitor assignment metrics dashboard"]},
+  {id:"uar-agent",n:"UAR Agent",st:"In Development",stb:"by",pri:"P0 - Ship Now",prib:"br",ic:"🔨",cat:"progress",tm:"Risk Assessment / FI (Doris)",pl:"Zenpayroll (Rails)",llm:"gpt-4o-mini",ds:"AI-powered UAR report generation for fraud investigations (ID Theft, True Party, Rogue Admin). Automates 30-60 min manual process with human-in-the-loop review and edit tracking. 17 PRs tracked.",im:"High — Saves 30-60 min per UAR, standardizes quality, built-in feedback loop",bl:"PRs pending review/merge",dp:"None — standalone in Panda Admin",doc:"Tech spec complete, SOP written, 17 PRs tracked",met:"Time per UAR, manual edit count, approval rate, effectiveness score",cx:"Large (~11K lines across 17 PRs)",sop:"✅ 11 UAR templates. Desktop Guide exists. Experienced + Standard scorecards.",pur:false,steps:["Get PRs reviewed and merged","Seed LLM prompts in production","Run pilot with 2-3 analysts","Build UAR Agent dashboard (SQL queries)"]},
+  {id:"bank-email",n:"Bank Email Agent",st:"First Draft",stb:"bb",pri:"P1 - Next Up",prib:"bo",ic:"📝",cat:"progress",tm:"Risk Assessment / FI / Money Risk (Doris)",pl:"Zenpayroll (Rails) + Gumloop",llm:"Existing agents (FraudPaymentReview, SessionsInvestigation)",ds:"Automates payment fraud verification from bank-flagged transactions. Ingests via JPM CSV or Gumloop email flow, orchestrates existing AI agents, produces Release/Hold/Cancel dispositions with human review. 24hr SLA.",im:"Very High — 24hr bank SLA, reduces fraud losses, leverages existing agents",bl:"Engineering review needed, Gumloop API contract, JPM data format",dp:"FraudPaymentReviewAgent, SessionsInvestigationAgent, TranslatorAgent, NachaEntry",doc:"First draft complete, pending engineering review",met:"Processing time (24hr SLA), accuracy, agreement rate, false positive rate",cx:"Large (new model, API, agent orchestration, review queue)",sop:"✅ Desktop Guide, Scorecard, ACH Macros, Bank Email Tracker, Banking Contacts, Gumloop macro.",pur:false,steps:["Engineering review of tech spec","Confirm JPM portal data format","Finalize Gumloop API webhook contract","Build Phase 1 MVP (Gumloop + TranslatorAgent + review queue)"]},
+  {id:"ato-doc",n:"ATO Doc Sub Agent",st:"In Progress",stb:"by",pri:"P1 - Next Up",prib:"bo",ic:"🔨",cat:"progress",tm:"FI (Doris + Pinkham)",pl:"Zenpayroll (Rails) / Gumloop",llm:"TBD (via AiPromptService)",ds:"Documentation sub-agent: converts confirmed ATO data into 3 outputs — (1) Panda ATO Report (23 new SAR fields), (2) SAR narrative (auto ≥$2K), (3) ATOMs Slack blurb. V3 prompt blueprint complete.",im:"Very High — Automates entire ATO case closure pipeline. SAR compliance critical.",bl:"Pinkham implementing 23 new Panda fields + Submit button (started 1/15)",dp:"Panda ATO Report schema update, confirmed ATO trigger, SAR template",doc:"4-phase workback plan. V3 prompt. 23 fields defined. Canonical data model done.",met:"SAR quality (L&C review), data mapping accuracy, automation time",cx:"Large — 4 phases: Data Model → Logic → Integration → Launch",sop:"✅ ATO Desktop Guide, ATO Scorecard, ATO UAR Template, LOI Templates, AML/EDD Referrals, SAR template.",pur:false,steps:["Pinkham: Complete 23 new Panda ATO Report fields + Submit button","Pinkham: Develop structured output prompt + SAR narrative prompt","Doris: Finalize ATOMs Slack blurb prompt","Integrate with Panda API (confirmed ATO trigger)","Build Documentation Agent microservice (Submit → SAR)","Integrate with Slack API (auto-post to ATOMs)","Test against 10 previously confirmed ATO cases","L&C compliance review of SAR output","Define human-in-the-loop protocol for SAR draft","Full production launch"]},
+  {id:"fi-gpt",n:"FI GPT",st:"Not Started",stb:"bgr",pri:"P2 - Build Next",prib:"bb",ic:"⬜",cat:"notstarted",tm:"Trust & Safety / FI / Money Risk",pl:"TBD (RAG-based system)",llm:"TBD",ds:"FI team's AI knowledge base. Ingests ENTIRE SOP house (72+ docs): 18 templates, 11 macros, 15 desktop guides, 13 scorecards, 2 procedures, 6 quick links, 7 AI tooling entries.",im:"Very High — Transforms 72+ SOPs into instant queryable assistant. Accelerates onboarding.",bl:"Architecture decision needed (RAG pipeline, embeddings, hosting)",dp:"Entire SOP house (72+ documents across 7 sheets)",doc:"No tech spec yet. SOP house fully catalogued.",met:"Query accuracy, analyst adoption, time saved, SOP coverage %",cx:"Large — document ingestion, embedding, retrieval, conversational UI",sop:"🟣 USES ENTIRE SOP HOUSE: All 72+ documents across all 7 sheets.",pur:true,steps:["Define architecture (RAG vs fine-tuning vs prompt-stuffing)","Design SOP ingestion pipeline — index all 72+ docs","Build document chunking + embedding strategy","Create conversational interface (Panda / Slack bot / standalone)","Test retrieval accuracy across all 7 SOP categories","Plan update pipeline to keep KB in sync as SOPs change"]},
+  {id:"risk-tracker",n:"Risk Alert / USR Tracker for QC",st:"Not Started",stb:"bgr",pri:"P2 - Build Next",prib:"bb",ic:"⬜",cat:"notstarted",tm:"FI / Trust & Safety",pl:"TBD",llm:"TBD",ds:"QC tracking system for Risk Alerts and USR agent decisions. Dashboard to monitor dispositions, agent accuracy, and QC compliance.",im:"High — Critical for validating AI agent accuracy and QC standards",bl:"Needs requirements gathering and scoping",dp:"USR Agent (live), Investigations Agent, QC Procedure",doc:"No tech spec. Related SOP infrastructure exists.",met:"QC pass rate, agent accuracy vs human, scorecard compliance",cx:"Medium",sop:"✅ USR DG [WIP], Slack Channel Review DG + Scorecard, QC Procedure, all 13 Scorecards.",pur:false,steps:["Define scope: what Risk Alerts and USR metrics to track","Map to existing scorecard categories + QC procedure","Decide platform (Panda dashboard vs standalone)","Write tech spec"]},
+  {id:"uar-qc",n:"UAR QC Agent",st:"Not Started",stb:"bgr",pri:"P2 - After Dependencies",prib:"bb",ic:"⬜",cat:"notstarted",tm:"Risk Assessment / FI",pl:"TBD",llm:"TBD",ds:"QC agent for UAR reports. Leverages edit tracking (uar_edit_histories) to automate QC checks against scorecard criteria.",im:"Medium — Depends on UAR Agent being live first",bl:"Requires UAR Agent live with edit data",dp:"UAR Agent (must be live first)",doc:"No tech spec. Builds on UAR Agent data.",met:"QC pass rate, common edit categories, quality trends",cx:"Medium (extends UAR Agent infra)",sop:"✅ QC Procedure, UAR Scorecards (Standard + Experienced), 11 UAR templates, UAR DG + Reconciliation.",pur:false,steps:["Ship UAR Agent first","Analyze edit tracking data to define QC criteria","Map scorecard rubric to automated checks","Write tech spec"]},
+  {id:"sfdc-qc",n:"Salesforce QC Agent",st:"Not Started",stb:"bgr",pri:"P2 - After Dependencies",prib:"bb",ic:"⬜",cat:"notstarted",tm:"Risk Investigation",pl:"TBD (Gumloop or Rails)",llm:"TBD",ds:"QC agent for Salesforce ticket handling. Monitors resolution quality across all 13 investigation categories.",im:"Medium — Improves ticket quality and compliance",bl:"Needs requirements gathering",dp:"SF Ticket Assigner (live), QC criteria",doc:"No tech spec found.",met:"Ticket quality scores, compliance rate, resolution time",cx:"Medium",sop:"✅ All 13 scorecards, QC Procedure, Investigations Procedure, all Desktop Guides.",pur:false,steps:["Define QC criteria from 13 scorecards","Decide platform (Gumloop vs Rails)","Write tech spec","Build after UAR QC learnings"]},
+  {id:"legal",n:"Legal Report Update",st:"Not Started",stb:"bgr",pri:"P3 - Backlog",prib:"bgr",ic:"⬜",cat:"notstarted",tm:"L&C / Legal",pl:"TBD",llm:"TBD",ds:"Automation for updating legal reports. May relate to LOI documentation, BSA/compliance reporting, or L&C workflows.",im:"TBD — Needs scoping",bl:"Needs requirements gathering",dp:"TBD",doc:"No tech spec found.",met:"TBD",cx:"Unknown",sop:"📝 Possibly: LOI Templates, LOI Scorecard, AML/EDD Referral templates, Referral report.",pur:false,steps:["Scope requirements with Legal/L&C stakeholders","Identify which reports need automation","Check if LOI/referral reporting is the target","Write proposal/tech spec"]}
+];
+const sopData=[{n:"Templates",c:18,d:"UAR templates (11 types), trackers, LOI templates, internal referrals"},{n:"Communication Macros",c:11,d:"Customer/bank comms: LOIs, BEC, ATO, phishing, disputes, bank emails"},{n:"Quick Links",c:6,d:"UAR tracker, banking contacts, BEC tracker, bank email tracker, rotations, referrals"},{n:"Desktop Guides",c:15,d:"Full coverage: ATO, BEC, bank emails, USRs [WIP], UARs, suspicious activity, etc."},{n:"Master Scorecards",c:13,d:"QC rubrics for every investigation type + naming conventions"},{n:"Procedures",c:2,d:"FI Quality Control Procedure, FI Investigations Procedure"},{n:"AI Tooling",c:7,d:"Bank Email Gumloop, SF Ticket Assigner, USR/ATO/Phishing agents, Symphony AI"}];
+
+let state = {checked:{},notes:{},customSteps:{}};
+let currentFilter = 'all';
+let selectedId = null;
+
+function loadState(){try{const s=localStorage.getItem('fi-dash-state');if(s)state=JSON.parse(s)}catch(e){}}
+function saveState(){try{localStorage.setItem('fi-dash-state',JSON.stringify(state));document.getElementById('lastSaved').textContent='Last saved: '+new Date().toLocaleString()}catch(e){}}
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+
+function exportData(){const d=JSON.stringify(state,null,2);const b=new Blob([d],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='fi-projects-state-'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('✅ Exported!')}
+function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{state=JSON.parse(ev.target.result);saveState();render();toast('✅ Imported!')}catch(er){toast('❌ Invalid file')}};r.readAsText(f);e.target.value=''}
+
+function getSteps(p){return[...p.steps,...(state.customSteps[p.id]||[])]}
+function getChecked(pid,i){return!!(state.checked[pid]&&state.checked[pid][i])}
+function getProgress(p){const s=getSteps(p);if(!s.length)return 0;let d=0;s.forEach((_,i)=>{if(getChecked(p.id,i))d++});return Math.round(d/s.length*100)}
+function toggleCheck(pid,i){if(!state.checked[pid])state.checked[pid]={};state.checked[pid][i]=!state.checked[pid][i];saveState();render()}
+function updateNotes(pid,val){state.notes[pid]=val;saveState();const el=document.getElementById('saved-'+pid);if(el){el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1500)}}
+function addStep(pid){const inp=document.getElementById('new-step-'+pid);const v=inp.value.trim();if(!v)return;if(!state.customSteps[pid])state.customSteps[pid]=[];state.customSteps[pid].push(v);inp.value='';saveState();render();setTimeout(()=>{const el=document.getElementById('card-'+pid);if(el&&!el.querySelector('.pc-det.open')){el.querySelector('.pc-hdr').click()}},50)}
+function removeStep(pid,i,p){const base=p.steps.length;const ci=i-base;if(ci>=0&&state.customSteps[pid]){state.customSteps[pid].splice(ci,1);if(state.checked[pid]){const nc={};Object.keys(state.checked[pid]).forEach(k=>{const ki=parseInt(k);if(ki<i)nc[k]=state.checked[pid][k];else if(ki>i)nc[ki-1]=state.checked[pid][k]});state.checked[pid]=nc}saveState();render()}}
+function toggleCard(id){selectedId=selectedId===id?null:id;render()}
+function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render()}
+function switchTab(t){document.getElementById('tab-projects').classList.toggle('hidden',t!=='projects');document.getElementById('tab-sop').classList.toggle('hidden',t!=='sop');document.getElementById('tab-btn-projects').classList.toggle('active',t==='projects');document.getElementById('tab-btn-sop').classList.toggle('active',t==='sop')}
+
+function render(){
+  // Stats
+  let totalSteps=0,totalDone=0;
+  P.forEach(p=>{const s=getSteps(p);s.forEach((_,i)=>{totalSteps++;if(getChecked(p.id,i))totalDone++})});
+  document.getElementById('s-pct').textContent=totalSteps?Math.round(totalDone/totalSteps*100)+'%':'0%';
+
+  // Priority bar
+  const pb=document.getElementById('priBar');pb.innerHTML='';
+  P.forEach(function(p,i){
+    var d=document.createElement('div');d.className='pri-item'+(selectedId===p.id?' act':'');
+    d.onclick=function(){toggleCard(p.id)};
+    var pct=getProgress(p);
+    var pColor=pct===100?'#16a34a':pct>0?'#6366f1':'#e2e8f0';
+    d.innerHTML='<span class="pri-num">'+(i+1)+'</span><div style="flex:1"><div class="pri-name">'+p.n+'</div><div class="pri-label">'+p.pri+'</div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+pColor+'"></div></div></div>';
+    pb.appendChild(d);
+  });
+
+  // Project cards
+  const pc=document.getElementById('projectCards');pc.innerHTML='';
+  P.forEach((p,idx)=>{
+    if(currentFilter!=='all'&&p.cat!==currentFilter)return;
+    const open=selectedId===p.id;
+    const pct=getProgress(p);
+    const steps=getSteps(p);
+    let stepsHtml=steps.map((s,i)=>{
+      const chk=getChecked(p.id,i);
+      const isCustom=i>=p.steps.length;
+      return'<div class="step'+(chk?' done':'')+'"><input type="checkbox" '+(chk?'checked ':'')+' onchange="toggleCheck(\''+p.id+'\','+i+')"><span class="step-text">'+s+'</span>'+(isCustom?'<button onclick="event.stopPropagation();removeStep(\''+p.id+'\','+i+',P['+idx+'])" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px" title="Remove">×</button>':'')+'</div>';
+    }).join('');
+
+    const card=document.createElement('div');card.className='pc'+(open?' act':'');card.id='card-'+p.id;
+    var doneCount=steps.filter(function(_,i){return getChecked(p.id,i)}).length;
+    var pColor=pct===100?'#16a34a':pct>0?'#6366f1':'#e2e8f0';
+    var h='<div class="pc-hdr" onclick="toggleCard(\''+p.id+'\')">';
+    h+='<div class="pc-left"><span class="pc-icon">'+p.ic+'</span><div class="pc-info">';
+    h+='<div class="pc-title">'+p.n+'</div>';
+    h+='<div class="pc-desc">'+p.ds.substring(0,100)+'...</div>';
+    h+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+pColor+'"></div></div>';
+    h+='<div class="progress-text">'+pct+'% complete ('+doneCount+'/'+steps.length+' steps)</div>';
+    h+='</div></div>';
+    h+='<div class="pc-badges"><span class="badge '+p.stb+'">'+p.st+'</span>';
+    h+='<span class="badge '+p.prib+'">'+p.pri+'</span>';
+    h+='<span class="arrow'+(open?' open':'')+'">▼</span></div></div>';
+    h+='<div class="pc-det'+(open?' open':'')+'">';
+    h+='<div class="det-grid">';
+    h+='<div><div class="det-lbl">Platform</div><div class="det-val">'+p.pl+'</div></div>';
+    h+='<div><div class="det-lbl">LLM</div><div class="det-val">'+p.llm+'</div></div>';
+    h+='<div><div class="det-lbl">Team / DRI</div><div class="det-val">'+p.tm+'</div></div>';
+    h+='<div><div class="det-lbl">Complexity</div><div class="det-val">'+p.cx+'</div></div>';
+    h+='</div>';
+    h+='<div style="margin-top:16px"><div class="det-lbl">Full Description</div><div class="det-val">'+p.ds+'</div></div>';
+    h+='<div class="sop-box'+(p.pur?' pur':'')+'"><div class="sop-lbl">📚 SOP House Coverage</div><div class="det-val">'+p.sop+'</div></div>';
+    h+='<div class="det-grid" style="margin-top:16px">';
+    h+='<div><div class="det-lbl">Impact</div><div class="det-val">'+p.im+'</div></div>';
+    h+='<div><div class="det-lbl">Blockers</div><div class="det-val red">'+p.bl+'</div></div>';
+    h+='</div>';
+    h+='<div style="margin-top:16px"><div class="det-lbl">Dependencies</div><div class="det-val">'+p.dp+'</div></div>';
+    h+='<div class="det-grid" style="margin-top:16px">';
+    h+='<div><div class="det-lbl">Doc Status</div><div class="det-val">'+p.doc+'</div></div>';
+    h+='<div><div class="det-lbl">Key Metrics</div><div class="det-val">'+p.met+'</div></div>';
+    h+='</div>';
+    h+='<div class="steps"><div class="steps-title">✅ Next Steps (click to check off)</div>'+stepsHtml;
+    h+='<div class="add-step"><input type="text" id="new-step-'+p.id+'" placeholder="Add a custom step..." onkeydown="if(event.key===\'Enter\')addStep(\''+p.id+'\')"><button onclick="addStep(\''+p.id+'\')">+ Add</button></div>';
+    h+='</div>';
+    h+='<div class="notes-section"><div class="notes-title">📝 Notes</div>';
+    h+='<textarea class="notes-area" placeholder="Add project notes, updates, meeting outcomes..." oninput="updateNotes(\''+p.id+'\',this.value)">'+(state.notes[p.id]||'')+'</textarea>';
+    h+='<div class="notes-saved" id="saved-'+p.id+'">✅ Saved</div>';
+    h+='</div></div>';
+    card.innerHTML=h;
+    pc.appendChild(card);
+  });
+
+  // SOP sheets
+  const ss=document.getElementById('sopSheets');ss.innerHTML='';
+  sopData.forEach(function(s){
+    ss.innerHTML+='<div class="sop-sheet"><div class="sop-ct">'+s.c+'</div><div><div style="font-weight:600;font-size:14px">'+s.n+'</div><div style="font-size:12px;color:#64748b;margin-top:2px">'+s.d+'</div></div></div>';
+  });
+}
+
+loadState();render();
+</script>
+</body>
+</html>
