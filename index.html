@@ -4,294 +4,775 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FI AI Projects Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;color:#1e293b;padding:16px;max-width:1200px;margin:0 auto}
-.hdr{background:linear-gradient(135deg,#1e293b,#334155);border-radius:12px;padding:24px 32px;margin-bottom:20px;color:#fff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.hdr h1{font-size:24px;font-weight:700}
-.hdr p{opacity:.8;font-size:14px;margin-top:4px}
-.hdr-actions{display:flex;gap:8px}
-.btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s}
-.btn-white{background:rgba(255,255,255,.15);color:#fff;backdrop-filter:blur(4px)}
-.btn-white:hover{background:rgba(255,255,255,.25)}
-.btn-primary{background:#6366f1;color:#fff}
-.btn-primary:hover{background:#4f46e5}
-.btn-outline{background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
-.tab{padding:10px 20px;border-radius:8px;border:none;cursor:pointer;font-size:14px;font-weight:600;background:#fff;color:#475569;box-shadow:0 1px 3px rgba(0,0,0,.08);transition:all .2s}
-.tab.active{background:#6366f1;color:#fff}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
-.stat{background:#fff;border-radius:10px;padding:16px 20px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.stat-n{font-size:28px;font-weight:700}
-.stat-l{font-size:13px;color:#64748b;margin-top:2px}
-.green{color:#16a34a}.yellow{color:#d97706}.gray{color:#6b7280}.purple{color:#7e22ce}
-.card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:20px;padding:24px;overflow:hidden}
-.pri-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.pri-item{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;cursor:pointer;background:#f1f5f9;border:2px solid transparent;flex:1 1 auto;min-width:120px;transition:all .2s}
-.pri-item:hover,.pri-item.act{background:#e0e7ff;border-color:#6366f1}
-.pri-num{background:#e2e8f0;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#475569;flex-shrink:0}
-.pri-name{font-size:12px;font-weight:600;color:#1e293b}
-.pri-label{font-size:10px;color:#64748b}
-.rationale{background:#fefce8;border-radius:8px;padding:16px;font-size:13px;line-height:1.6;color:#713f12}
-.pc{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-bottom:16px;border:2px solid transparent;transition:all .2s}
-.pc.act{box-shadow:0 4px 12px rgba(99,102,241,.2);border-color:#6366f1}
-.pc-hdr{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.pc-left{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
-.pc-icon{font-size:20px;flex-shrink:0}
-.pc-info{min-width:0;flex:1}
-.pc-title{font-weight:600;font-size:16px}
-.pc-desc{font-size:13px;color:#64748b;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pc-badges{display:flex;gap:8px;align-items:center;flex-shrink:0;margin-left:12px;flex-wrap:wrap}
-.badge{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;white-space:nowrap}
-.bg{background:#dcfce7;color:#166534}.by{background:#fef9c3;color:#854d0e}.bb{background:#dbeafe;color:#1e40af}
-.bp{background:#f3e8ff;color:#7e22ce}.bo{background:#ffedd5;color:#9a3412}.br{background:#fee2e2;color:#991b1b}
-.bgr{background:#f1f5f9;color:#475569}
-.progress-bar{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin:8px 0}
-.progress-fill{height:100%;border-radius:3px;transition:width .3s}
-.progress-text{font-size:11px;color:#64748b;text-align:right}
-.arrow{font-size:18px;color:#94a3b8;transition:transform .2s;margin-left:8px}
-.arrow.open{transform:rotate(180deg)}
-.pc-det{padding:0 20px 20px;border-top:1px solid #f1f5f9;display:none}
-.pc-det.open{display:block}
-.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
-.det-lbl{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;margin-bottom:4px}
-.det-val{font-size:13px;color:#334155;line-height:1.5}
-.det-val.red{color:#dc2626}
-.sop-box{margin-top:16px;background:#f0fdf4;border-radius:8px;padding:14px;border:1px solid #bbf7d0}
-.sop-box.pur{background:#faf5ff;border:2px solid #c084fc}
-.sop-lbl{font-size:11px;font-weight:600;color:#166534;text-transform:uppercase;margin-bottom:4px}
-.sop-box.pur .sop-lbl{color:#7e22ce}
-.steps{margin-top:16px}
-.steps-title{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;margin-bottom:8px}
-.step{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid #f8fafc;font-size:13px;color:#334155;transition:all .2s}
-.step:last-child{border:none}
-.step.done .step-text{text-decoration:line-through;color:#94a3b8}
-.step input[type=checkbox]{width:18px;height:18px;accent-color:#6366f1;cursor:pointer;flex-shrink:0;margin-top:1px}
-.step-text{flex:1;line-height:1.4}
-.notes-section{margin-top:16px;background:#f8fafc;border-radius:8px;padding:14px;border:1px solid #e2e8f0}
-.notes-title{font-size:11px;font-weight:600;color:#94a3b8;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-.notes-area{width:100%;min-height:80px;border:1px solid #e2e8f0;border-radius:6px;padding:10px;font-size:13px;font-family:inherit;color:#334155;resize:vertical;background:#fff;transition:border-color .2s}
-.notes-area:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.1)}
-.notes-saved{font-size:11px;color:#16a34a;margin-top:4px;opacity:0;transition:opacity .3s}
-.notes-saved.show{opacity:1}
-.add-step{margin-top:8px;display:flex;gap:8px}
-.add-step input{flex:1;padding:8px 12px;border:1px solid #e2e8f0;border-radius:6px;font-size:13px;font-family:inherit}
-.add-step input:focus{outline:none;border-color:#6366f1}
-.add-step button{padding:8px 16px;background:#6366f1;color:#fff;border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer}
-.dep-map{font-size:13px;line-height:2.2;color:#334155;font-family:monospace}
-.dep-hl{color:#7e22ce;font-weight:600}
-.hidden{display:none}
-.sop-sheet{display:flex;align-items:center;gap:16px;padding:14px 18px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;margin-bottom:12px}
-.sop-ct{background:#e0e7ff;color:#4338ca;border-radius:8px;padding:6px 12px;font-weight:700;font-size:18px;min-width:48px;text-align:center}
-.mg{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.mb{padding:16px;border-radius:8px;font-size:13px;line-height:1.8}
-.mb h4{font-weight:700;margin-bottom:8px;font-size:14px}
-.m1{background:#f0fdf4;border:1px solid #bbf7d0}.m1 h4{color:#166534}
-.m2{background:#eff6ff;border:1px solid #bfdbfe}.m2 h4{color:#1e40af}
-.m3{background:#faf5ff;border:2px solid #c084fc}.m3 h4{color:#7e22ce}
-.m4{background:#fefce8;border:1px solid #fef08a}.m4 h4{color:#854d0e}
-.m5{background:#fff1f2;border:1px solid #fecdd3}.m5 h4{color:#9f1239}
-.m6{background:#f1f5f9;border:1px solid #cbd5e1}.m6 h4{color:#475569}
-.toast{position:fixed;bottom:24px;right:24px;background:#1e293b;color:#fff;padding:12px 20px;border-radius:8px;font-size:13px;font-weight:600;opacity:0;transform:translateY(10px);transition:all .3s;z-index:100;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
-.filter-bar{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;font-size:12px;font-weight:600;cursor:pointer;color:#64748b;transition:all .2s}
-.filter-btn.active{background:#6366f1;color:#fff;border-color:#6366f1}
-.last-saved{font-size:11px;color:#64748b;margin-top:4px}
-@media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr)}.det-grid,.mg{grid-template-columns:1fr}.pc-badges{flex-wrap:wrap}}
+:root {
+  --coral: #FF6B50;
+  --coral-light: #FF8F73;
+  --coral-lighter: #FFAB91;
+  --coral-lightest: #FFE4DE;
+  --coral-bg: #FFF9F7;
+  --coral-dark: #E85D3A;
+  --coral-darker: #C94A2A;
+  --text: #2D2019;
+  --text-secondary: #7A6E65;
+  --text-muted: #A89E96;
+  --white: #FFFFFF;
+  --border: #F0E8E4;
+  --border-hover: #FFCBB8;
+  --green: #10B981;
+  --green-bg: #ECFDF5;
+  --green-border: #A7F3D0;
+  --amber: #F59E0B;
+  --amber-bg: #FFFBEB;
+  --amber-border: #FDE68A;
+  --blue: #3B82F6;
+  --blue-bg: #EFF6FF;
+  --blue-border: #BFDBFE;
+  --gray: #6B7280;
+  --gray-bg: #F3F4F6;
+  --gray-border: #D1D5DB;
+  --red: #EF4444;
+  --red-bg: #FEF2F2;
+  --purple: #8B5CF6;
+  --purple-bg: #F5F3FF;
+  --purple-border: #C4B5FD;
+  --orange-bg: #FFF7ED;
+  --orange-border: #FED7AA;
+  --shadow-sm: 0 1px 3px rgba(45,32,25,0.06);
+  --shadow-md: 0 4px 14px rgba(45,32,25,0.08);
+  --shadow-lg: 0 8px 28px rgba(45,32,25,0.12);
+  --shadow-coral: 0 4px 20px rgba(255,107,80,0.2);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--coral-bg); color:var(--text); padding:20px; max-width:1280px; margin:0 auto; min-height:100vh; }
+
+.header { background:linear-gradient(135deg, #FF6B50 0%, #FF8A65 40%, #FFAB91 100%); border-radius:20px; padding:32px 40px; margin-bottom:24px; color:white; position:relative; overflow:hidden; }
+.header::before { content:''; position:absolute; top:-60%; right:-10%; width:400px; height:400px; background:radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 70%); border-radius:50%; }
+.header::after { content:''; position:absolute; bottom:-40%; left:5%; width:300px; height:300px; background:radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%); border-radius:50%; }
+.header-inner { position:relative; z-index:1; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.header h1 { font-size:28px; font-weight:800; letter-spacing:-0.5px; }
+.header .subtitle { opacity:0.9; font-size:14px; margin-top:6px; font-weight:500; }
+.header .last-saved { opacity:0.7; font-size:11px; margin-top:4px; }
+.header-actions { display:flex; gap:8px; flex-wrap:wrap; }
+.btn { padding:10px 18px; border-radius:10px; border:none; cursor:pointer; font-size:13px; font-weight:600; font-family:inherit; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-glass { background:rgba(255,255,255,0.18); color:white; backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,0.25); }
+.btn-glass:hover { background:rgba(255,255,255,0.3); transform:translateY(-1px); }
+.btn-coral { background:var(--coral); color:white; box-shadow:var(--shadow-coral); }
+.btn-coral:hover { background:var(--coral-dark); transform:translateY(-1px); }
+.btn-white { background:white; color:var(--text); box-shadow:var(--shadow-sm); border:1px solid var(--border); }
+.btn-white:hover { border-color:var(--coral-lighter); box-shadow:var(--shadow-md); }
+.btn-danger { background:var(--red); color:white; }
+.btn-danger:hover { background:#DC2626; }
+.btn-sm { padding:6px 12px; font-size:12px; border-radius:8px; }
+
+.tabs { display:flex; gap:8px; margin-bottom:24px; }
+.tab { padding:12px 24px; border-radius:12px; border:none; cursor:pointer; font-size:14px; font-weight:600; font-family:inherit; background:white; color:var(--text-secondary); box-shadow:var(--shadow-sm); transition:all 0.2s; border:2px solid transparent; }
+.tab:hover { color:var(--coral); border-color:var(--coral-lightest); }
+.tab.active { background:var(--coral); color:white; box-shadow:var(--shadow-coral); }
+
+.stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.stat { background:white; border-radius:16px; padding:20px 24px; box-shadow:var(--shadow-sm); border-left:4px solid var(--coral-lighter); transition:all 0.25s; }
+.stat:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.stat-n { font-size:32px; font-weight:800; letter-spacing:-1px; }
+.stat-l { font-size:13px; color:var(--text-secondary); margin-top:4px; font-weight:500; }
+.stat.green .stat-n { color:var(--green); }
+.stat.amber .stat-n { color:var(--amber); }
+.stat.gray .stat-n { color:var(--gray); }
+.stat.coral .stat-n { color:var(--coral); }
+
+.filters { display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap; }
+.filter-pill { padding:8px 16px; border-radius:24px; border:2px solid var(--border); background:white; font-size:13px; font-weight:600; cursor:pointer; color:var(--text-secondary); transition:all 0.2s; font-family:inherit; }
+.filter-pill:hover { border-color:var(--coral-lighter); color:var(--coral); }
+.filter-pill.active { background:var(--coral); color:white; border-color:var(--coral); box-shadow:var(--shadow-coral); }
+
+.card { background:white; border-radius:16px; box-shadow:var(--shadow-sm); margin-bottom:20px; padding:24px 28px; }
+.card h3 { font-size:18px; font-weight:700; margin-bottom:16px; color:var(--text); }
+
+.rationale { background:var(--coral-lightest); border-radius:12px; padding:16px 20px; font-size:13px; line-height:1.7; color:var(--coral-darker); border:1px solid var(--coral-lighter); }
+
+.pri-bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+.pri-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:12px; cursor:pointer; background:var(--coral-bg); border:2px solid transparent; flex:1 1 auto; min-width:130px; transition:all 0.2s; }
+.pri-item:hover { background:var(--coral-lightest); border-color:var(--coral-lighter); }
+.pri-item.act { background:var(--coral-lightest); border-color:var(--coral); box-shadow:0 2px 8px rgba(255,107,80,0.15); }
+.pri-num { background:var(--coral-lighter); border-radius:50%; width:26px; height:26px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:var(--coral-darker); flex-shrink:0; }
+.pri-name { font-size:12px; font-weight:600; color:var(--text); line-height:1.3; }
+.pri-label { font-size:10px; color:var(--text-secondary); }
+
+.pc { background:white; border-radius:16px; overflow:hidden; box-shadow:var(--shadow-sm); margin-bottom:16px; border:2px solid transparent; transition:all 0.25s; }
+.pc:hover { box-shadow:var(--shadow-md); }
+.pc.act { border-color:var(--coral); box-shadow:0 6px 24px rgba(255,107,80,0.18); }
+.pc-hdr { padding:18px 24px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
+.pc-left { display:flex; align-items:center; gap:14px; flex:1; min-width:0; }
+.pc-icon { font-size:22px; flex-shrink:0; }
+.pc-info { min-width:0; flex:1; }
+.pc-title { font-weight:700; font-size:16px; }
+.pc-desc { font-size:13px; color:var(--text-secondary); margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.pc-right { display:flex; gap:8px; align-items:center; flex-shrink:0; margin-left:16px; flex-wrap:wrap; }
+.pc-progress { display:flex; align-items:center; gap:8px; margin-right:8px; }
+.progress-ring { width:36px; height:36px; flex-shrink:0; }
+.progress-ring circle { transition:stroke-dashoffset 0.4s ease; }
+.progress-pct { font-size:11px; font-weight:700; color:var(--text-secondary); }
+.badge { padding:5px 12px; border-radius:8px; font-size:11px; font-weight:700; white-space:nowrap; letter-spacing:0.3px; }
+.badge-live { background:var(--green-bg); color:#065F46; border:1px solid var(--green-border); }
+.badge-progress { background:var(--amber-bg); color:#92400E; border:1px solid var(--amber-border); }
+.badge-draft { background:var(--blue-bg); color:#1E40AF; border:1px solid var(--blue-border); }
+.badge-notstarted { background:var(--gray-bg); color:#374151; border:1px solid var(--gray-border); }
+.badge-shipped { background:var(--green-bg); color:#065F46; border:1px solid var(--green-border); }
+.badge-p0 { background:var(--red-bg); color:#991B1B; border:1px solid #FECACA; }
+.badge-p1 { background:var(--orange-bg); color:#9A3412; border:1px solid var(--orange-border); }
+.badge-p2 { background:var(--blue-bg); color:#1E40AF; border:1px solid var(--blue-border); }
+.badge-p3 { background:var(--gray-bg); color:#374151; border:1px solid var(--gray-border); }
+.arrow { font-size:18px; color:var(--text-muted); transition:transform 0.25s; margin-left:8px; }
+.arrow.open { transform:rotate(180deg); }
+.edit-btn { background:none; border:none; cursor:pointer; font-size:16px; padding:4px 8px; border-radius:6px; transition:all 0.2s; opacity:0.5; }
+.edit-btn:hover { background:var(--coral-lightest); opacity:1; }
+
+.pc-det { padding:0 24px 24px; border-top:1px solid var(--border); display:none; }
+.pc-det.open { display:block; animation:slideDown 0.3s ease; }
+@keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+.det-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+.det-lbl { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.det-val { font-size:13px; color:var(--text); line-height:1.6; }
+.det-full { grid-column:1/-1; }
+
+.sop-box { margin-top:16px; border-radius:12px; padding:16px 20px; }
+.sop-box.green { background:var(--green-bg); border:1px solid var(--green-border); }
+.sop-box.purple { background:var(--purple-bg); border:2px solid var(--purple-border); }
+.sop-lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.sop-box.green .sop-lbl { color:#065F46; }
+.sop-box.purple .sop-lbl { color:var(--purple); }
+.sop-val { font-size:13px; line-height:1.6; }
+
+.steps { margin-top:20px; }
+.steps-title { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; display:flex; align-items:center; gap:8px; }
+.step { display:flex; gap:12px; align-items:flex-start; padding:10px 0; border-bottom:1px solid var(--coral-bg); font-size:13px; color:var(--text); transition:all 0.2s; }
+.step:last-child { border:none; }
+.step.done .step-text { text-decoration:line-through; color:var(--text-muted); }
+.step input[type=checkbox] { width:20px; height:20px; accent-color:var(--coral); cursor:pointer; flex-shrink:0; margin-top:1px; border-radius:4px; }
+.step-text { flex:1; line-height:1.5; }
+.step-remove { background:none; border:none; cursor:pointer; color:var(--text-muted); font-size:16px; padding:0 4px; opacity:0.4; transition:all 0.2s; }
+.step-remove:hover { opacity:1; color:var(--red); }
+.add-step { margin-top:12px; display:flex; gap:8px; }
+.add-step input { flex:1; padding:10px 14px; border:2px solid var(--border); border-radius:10px; font-size:13px; font-family:inherit; color:var(--text); transition:all 0.2s; }
+.add-step input:focus { outline:none; border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,80,0.1); }
+.add-step button { padding:10px 18px; background:var(--coral); color:white; border:none; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all 0.2s; }
+.add-step button:hover { background:var(--coral-dark); }
+
+.notes-section { margin-top:20px; background:var(--coral-bg); border-radius:12px; padding:16px 20px; border:1px solid var(--border); }
+.notes-title { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.notes-area { width:100%; min-height:80px; border:2px solid var(--border); border-radius:10px; padding:12px 14px; font-size:13px; font-family:inherit; color:var(--text); resize:vertical; background:white; transition:all 0.2s; }
+.notes-area:focus { outline:none; border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,80,0.1); }
+.notes-saved { font-size:11px; color:var(--green); margin-top:6px; opacity:0; transition:opacity 0.3s; font-weight:600; }
+.notes-saved.show { opacity:1; }
+
+.add-project-btn { display:block; width:100%; padding:18px; border:3px dashed var(--coral-lighter); border-radius:16px; background:transparent; color:var(--coral); font-size:16px; font-weight:700; cursor:pointer; font-family:inherit; transition:all 0.2s; margin-bottom:24px; }
+.add-project-btn:hover { background:var(--coral-lightest); border-color:var(--coral); transform:translateY(-1px); }
+
+.dep-map { font-size:13px; line-height:2.4; color:var(--text); font-family:'SF Mono',SFMono-Regular,Consolas,monospace; background:var(--coral-bg); border-radius:12px; padding:20px; border:1px solid var(--border); }
+.dep-hl { color:var(--purple); font-weight:700; }
+.dep-live { color:var(--green); font-weight:600; }
+
+.sop-sheet { display:flex; align-items:center; gap:20px; padding:16px 20px; background:var(--coral-bg); border-radius:12px; border:1px solid var(--border); margin-bottom:12px; transition:all 0.2s; }
+.sop-sheet:hover { border-color:var(--coral-lighter); box-shadow:var(--shadow-sm); }
+.sop-ct { background:linear-gradient(135deg, var(--coral), var(--coral-light)); color:white; border-radius:12px; padding:8px 14px; font-weight:800; font-size:20px; min-width:52px; text-align:center; }
+.sop-info { flex:1; }
+.sop-name { font-weight:700; font-size:15px; color:var(--text); }
+.sop-desc { font-size:13px; color:var(--text-secondary); margin-top:2px; }
+
+.sop-mapping { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+.sop-map-card { padding:20px; border-radius:12px; font-size:13px; line-height:1.8; }
+.sop-map-card h4 { font-weight:700; margin-bottom:10px; font-size:14px; }
+.sop-m1 { background:var(--green-bg); border:1px solid var(--green-border); }
+.sop-m1 h4 { color:#065F46; }
+.sop-m2 { background:var(--blue-bg); border:1px solid var(--blue-border); }
+.sop-m2 h4 { color:#1E40AF; }
+.sop-m3 { background:var(--purple-bg); border:2px solid var(--purple-border); }
+.sop-m3 h4 { color:var(--purple); }
+.sop-m4 { background:var(--amber-bg); border:1px solid var(--amber-border); }
+.sop-m4 h4 { color:#92400E; }
+.sop-m5 { background:var(--red-bg); border:1px solid #FECACA; }
+.sop-m5 h4 { color:#991B1B; }
+.sop-m6 { background:var(--gray-bg); border:1px solid var(--gray-border); }
+.sop-m6 h4 { color:#374151; }
+
+.modal-overlay { position:fixed; inset:0; background:rgba(45,32,25,0.5); backdrop-filter:blur(4px); z-index:1000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; visibility:hidden; transition:all 0.3s; }
+.modal-overlay.open { opacity:1; visibility:visible; }
+.modal { background:white; border-radius:20px; width:100%; max-width:680px; max-height:90vh; overflow:hidden; display:flex; flex-direction:column; transform:scale(0.95) translateY(10px); transition:all 0.3s; box-shadow:var(--shadow-lg); }
+.modal-overlay.open .modal { transform:scale(1) translateY(0); }
+.modal-accent { height:5px; background:linear-gradient(90deg, var(--coral), var(--coral-light), var(--coral-lighter)); }
+.modal-header { padding:20px 28px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); }
+.modal-header h2 { font-size:20px; font-weight:700; }
+.modal-close { background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-muted); padding:4px 8px; border-radius:6px; transition:all 0.2s; }
+.modal-close:hover { background:var(--coral-lightest); color:var(--coral); }
+.modal-body { padding:24px 28px; overflow-y:auto; flex:1; }
+.modal-footer { padding:16px 28px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:center; background:var(--coral-bg); }
+.modal-footer-right { display:flex; gap:8px; }
+
+.form-row { display:grid; gap:16px; margin-bottom:16px; }
+.form-row.cols-2 { grid-template-columns:1fr 1fr; }
+.form-row.cols-3 { grid-template-columns:auto 1fr 1fr; }
+.form-group { display:flex; flex-direction:column; }
+.form-label { font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; }
+.form-input, .form-select, .form-textarea { padding:10px 14px; border:2px solid var(--border); border-radius:10px; font-size:14px; font-family:inherit; color:var(--text); transition:all 0.2s; background:white; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { outline:none; border-color:var(--coral); box-shadow:0 0 0 3px rgba(255,107,80,0.1); }
+.form-select { cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 8L1 3h10z' fill='%23A89E96'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:32px; }
+.form-textarea { min-height:72px; resize:vertical; }
+.form-input-sm { max-width:80px; text-align:center; font-size:18px; }
+
+.toast { position:fixed; bottom:28px; right:28px; background:var(--coral-darker); color:white; padding:14px 24px; border-radius:12px; font-size:14px; font-weight:600; opacity:0; transform:translateY(12px); transition:all 0.3s; z-index:2000; pointer-events:none; box-shadow:var(--shadow-lg); }
+.toast.show { opacity:1; transform:translateY(0); }
+
+.hidden { display:none !important; }
+
+@media(max-width:768px) {
+  body { padding:12px; }
+  .header { padding:20px 24px; border-radius:16px; }
+  .header h1 { font-size:22px; }
+  .stats { grid-template-columns:repeat(2,1fr); gap:12px; }
+  .det-grid, .sop-mapping { grid-template-columns:1fr; }
+  .pc-right { flex-wrap:wrap; }
+  .form-row.cols-2, .form-row.cols-3 { grid-template-columns:1fr; }
+  .modal { max-height:95vh; border-radius:16px; }
+  .pri-bar { flex-direction:column; }
+}
 </style>
 </head>
 <body>
-<div class="hdr">
-  <div><h1>🤖 FI AI Projects Dashboard</h1><p>Fraud Investigations & Risk Assessment — 9 Projects | SOP House Integrated</p><div class="last-saved" id="lastSaved"></div></div>
-  <div class="hdr-actions">
-    <button class="btn btn-white" onclick="exportData()">📥 Export JSON</button>
-    <button class="btn btn-white" onclick="document.getElementById('importFile').click()">📤 Import JSON</button>
-    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-  </div>
-</div>
 
-<div class="tabs">
-  <button class="tab active" id="tab-btn-projects" onclick="switchTab('projects')">📋 Projects & Priority</button>
-  <button class="tab" id="tab-btn-sop" onclick="switchTab('sop')">📚 SOP House Overview</button>
-</div>
+<div id="toast" class="toast"></div>
 
-<div id="tab-projects">
-  <div class="stats">
-    <div class="stat"><div class="stat-n green" id="s-live">1</div><div class="stat-l">✅ Live</div></div>
-    <div class="stat"><div class="stat-n yellow" id="s-prog">3</div><div class="stat-l">In Progress</div></div>
-    <div class="stat"><div class="stat-n gray" id="s-not">5</div><div class="stat-l">Not Started</div></div>
-    <div class="stat"><div class="stat-n purple" id="s-pct">0%</div><div class="stat-l">Overall Steps Done</div></div>
-  </div>
-
-  <div class="filter-bar">
-    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
-    <button class="filter-btn" onclick="setFilter('live',this)">✅ Live</button>
-    <button class="filter-btn" onclick="setFilter('progress',this)">🔨 In Progress</button>
-    <button class="filter-btn" onclick="setFilter('notstarted',this)">⬜ Not Started</button>
-  </div>
-
-  <div class="card">
-    <h2 style="margin-bottom:16px;font-size:18px;font-weight:600">📋 Recommended Priority Order</h2>
-    <div class="pri-bar" id="priBar"></div>
-    <div class="rationale"><strong>Prioritization Rationale:</strong> SF Ticket Assigner is live ✅. UAR Agent is P0 — most developed (17 PRs, full SOP) with 30-60 min savings per report. Bank Email Agent is P1 due to 24hr bank SLA pressure. ATO Doc Sub Agent is P1 — Doris & Pinkham actively building 3-output doc pipeline. FI GPT is P2 — standalone knowledge base for all 72+ SOPs. Risk Alert/USR Tracker is P2 for agent accuracy validation. QC agents depend on parent tools being live. Legal Report Update needs scoping.</div>
-  </div>
-
-  <div id="projectCards"></div>
-
-  <div class="card">
-    <h2 style="margin-bottom:16px;font-size:18px;font-weight:600">🔗 Dependency Map</h2>
-    <div class="dep-map">
-      SF Ticket Assigner (✅ Live) ───→ <strong>Salesforce QC Agent</strong><br>
-      UAR Agent (In Dev) ───→ <strong>UAR QC Agent</strong><br>
-      Bank Email Agent (Draft) ───→ uses FraudPaymentReview + SessionsInvestigation agents<br>
-      ATO Doc Sub Agent (In Progress) ───→ Panda ATO Report + SAR + ATOMs Slack<br>
-      FI GPT (Not Started) ───→ Ingests ALL 72+ SOP docs ───→ Team knowledge base<br>
-      <span class="dep-hl">&nbsp;&nbsp;└─→ Can inform: UAR QC, SFDC QC, Risk Alert Tracker, onboarding</span><br>
-      USR Agent + Investigations Agent ───→ <strong>Risk Alert / USR Tracker for QC</strong><br>
-      Legal Report Update ───→ <em>Needs scoping (possibly LOIs/referrals)</em>
+<div id="modalOverlay" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-accent"></div>
+    <div class="modal-header">
+      <h2 id="modalTitle">Edit Project</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <div>
+        <button id="modalDelete" class="btn btn-danger btn-sm" onclick="deleteProject()" style="display:none">Delete Project</button>
+      </div>
+      <div class="modal-footer-right">
+        <button class="btn btn-white" onclick="closeModal()">Cancel</button>
+        <button class="btn btn-coral" onclick="saveModal()">Save Changes</button>
+      </div>
     </div>
   </div>
 </div>
 
-<div id="tab-sop" class="hidden">
+<header class="header">
+  <div class="header-inner">
+    <div>
+      <h1>🤖 FI AI Projects Dashboard</h1>
+      <p class="subtitle">Fraud Investigations & Risk Assessment — <span id="projectCount">9</span> Projects | SOP House Integrated</p>
+      <p class="last-saved" id="lastSaved"></p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-glass" onclick="exportData()">📥 Export</button>
+      <button class="btn btn-glass" onclick="document.getElementById('importFile').click()">📤 Import</button>
+      <input type="file" id="importFile" accept=".json" onchange="importData(event)" hidden>
+      <button class="btn btn-glass" onclick="resetData()">🔄 Reset</button>
+    </div>
+  </div>
+</header>
+
+<div class="tabs">
+  <button id="tabBtnProjects" class="tab active" onclick="switchTab('projects')">📋 Projects & Priority</button>
+  <button id="tabBtnSop" class="tab" onclick="switchTab('sop')">📚 SOP House Overview</button>
+</div>
+
+<div id="tabProjects">
+  <div class="stats" id="statsRow"></div>
+  <div class="filters" id="filterBar"></div>
   <div class="card">
-    <h2 style="margin-bottom:4px;font-size:18px;font-weight:600">FI's Procedures, Desktop Guides, and Templates</h2>
-    <p style="margin-bottom:16px;font-size:13px;color:#64748b">7 sheets — your team's operational knowledge base</p>
+    <h3>📋 Recommended Priority Order</h3>
+    <div class="pri-bar" id="priBar"></div>
+    <div class="rationale" id="rationaleBox"></div>
+  </div>
+  <div id="projectCards"></div>
+  <button class="add-project-btn" onclick="openAddModal()">+ Add New Project</button>
+  <div class="card">
+    <h3>🔗 Dependency Map</h3>
+    <div class="dep-map" id="depMap"></div>
+  </div>
+</div>
+
+<div id="tabSop" class="hidden">
+  <div class="card">
+    <h3>FI's Procedures, Desktop Guides, and Templates</h3>
+    <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px">7 sheets — your team's operational knowledge base</p>
     <div id="sopSheets"></div>
   </div>
   <div class="card">
-    <h2 style="margin-bottom:16px;font-size:18px;font-weight:600">🔗 SOP → AI Project Mapping</h2>
-    <div class="mg">
-      <div class="mb m1"><h4>UAR Agent touches:</h4>• 11 UAR templates (all fraud types)<br>• UAR Desktop Guide + Reconciliation Guide<br>• UAR Scorecards (Standard + Experienced)<br>• Exposure Calculation workbook<br>• FY26 UAR tracker (Quick Links)</div>
-      <div class="mb m2"><h4>Bank Email Agent touches:</h4>• Bank Emails Desktop Guide<br>• Bank Email Scorecard<br>• ACH Response Macros<br>• Bank Email Tracker (Quick Links)<br>• Banking Contacts (Quick Links)<br>• Gumloop extraction macro (AI Tooling)</div>
-      <div class="mb m3"><h4>🟣 FI GPT — USES ENTIRE SOP HOUSE:</h4>• ALL 18 templates<br>• ALL 11 communication macros<br>• ALL 15 desktop guides<br>• ALL 13 master scorecards<br>• Both procedures (QC + Investigations)<br>• ALL 6 quick links + ALL 7 AI tooling entries<br><em style="font-size:11px;color:#7e22ce">72+ documents — the team's AI brain</em></div>
-      <div class="mb m4"><h4>Risk Alert / USR Tracker for QC:</h4>• Slack Channel Review DG + Scorecard<br>• USR Desktop Guide [WIP]<br>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• FI Investigations Procedure</div>
-      <div class="mb m5"><h4>QC Agents (UAR + SFDC):</h4>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• Every Desktop Guide (QC criteria)<br>• FI Investigations Procedure</div>
-      <div class="mb m6"><h4>Legal Report Update may touch:</h4>• LOI Templates (Chase/PNC + DocuSign)<br>• LOI Scorecard<br>• AML/EDD Internal Referral templates<br>• Referral fraud detection report</div>
+    <h3>🔗 SOP → AI Project Mapping</h3>
+    <div class="sop-mapping">
+      <div class="sop-map-card sop-m1"><h4>UAR Agent touches:</h4>• 11 UAR templates (all fraud types)<br>• UAR Desktop Guide + Reconciliation Guide<br>• UAR Scorecards (Standard + Experienced)<br>• Exposure Calculation workbook<br>• FY26 UAR tracker (Quick Links)</div>
+      <div class="sop-map-card sop-m2"><h4>Bank Email Agent touches:</h4>• Bank Emails Desktop Guide<br>• Bank Email Scorecard<br>• ACH Response Macros<br>• Bank Email Tracker (Quick Links)<br>• Banking Contacts (Quick Links)<br>• Gumloop extraction macro (AI Tooling)</div>
+      <div class="sop-map-card sop-m3"><h4>🟣 FI GPT — USES ENTIRE SOP HOUSE:</h4>• ALL 18 templates<br>• ALL 11 communication macros<br>• ALL 15 desktop guides<br>• ALL 13 master scorecards<br>• Both procedures (QC + Investigations)<br>• ALL 6 quick links + ALL 7 AI tooling entries<br><strong>72+ documents — the team's AI brain</strong></div>
+      <div class="sop-map-card sop-m4"><h4>Risk Alert / USR Tracker for QC:</h4>• Slack Channel Review DG + Scorecard<br>• USR Desktop Guide [WIP]<br>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• FI Investigations Procedure</div>
+      <div class="sop-map-card sop-m5"><h4>QC Agents (UAR + SFDC):</h4>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• Every Desktop Guide (QC criteria)<br>• FI Investigations Procedure</div>
+      <div class="sop-map-card sop-m6"><h4>Legal Report Update may touch:</h4>• LOI Templates (Chase/PNC + DocuSign)<br>• LOI Scorecard<br>• AML/EDD Internal Referral templates<br>• Referral fraud detection report</div>
     </div>
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
-
 <script>
-const P = [
-  {id:"sf-assigner",n:"Salesforce Ticket Assigner",st:"✅ Live",stb:"bg",pri:"Shipped",prib:"bg",ic:"✅",cat:"live",tm:"Risk Investigation (Doris)",pl:"Gumloop",llm:"N/A (rule-based)",ds:"Automated round-robin ticket assignment for Salesforce Risk Investigation queue. Google Sheets for availability/state, Slack notifications.",im:"Medium — Eliminates manual assignment, fair workload distribution",bl:"None — operational",dp:"Salesforce OAuth, Google Sheets, Slack",doc:"Tech spec complete, production validated",met:"Tickets/analyst, response times, queue depth",cx:"Small (Gumloop no-code flow)",sop:"✅ Listed in AI Tooling sheet. Gumloop flow link tracked.",pur:false,steps:["Phase 2: Handle no available analysts fallback","Monitor assignment metrics dashboard"]},
-  {id:"uar-agent",n:"UAR Agent",st:"In Development",stb:"by",pri:"P0 - Ship Now",prib:"br",ic:"🔨",cat:"progress",tm:"Risk Assessment / FI (Doris)",pl:"Zenpayroll (Rails)",llm:"gpt-4o-mini",ds:"AI-powered UAR report generation for fraud investigations (ID Theft, True Party, Rogue Admin). Automates 30-60 min manual process with human-in-the-loop review and edit tracking. 17 PRs tracked.",im:"High — Saves 30-60 min per UAR, standardizes quality, built-in feedback loop",bl:"PRs pending review/merge",dp:"None — standalone in Panda Admin",doc:"Tech spec complete, SOP written, 17 PRs tracked",met:"Time per UAR, manual edit count, approval rate, effectiveness score",cx:"Large (~11K lines across 17 PRs)",sop:"✅ 11 UAR templates. Desktop Guide exists. Experienced + Standard scorecards.",pur:false,steps:["Get PRs reviewed and merged","Seed LLM prompts in production","Run pilot with 2-3 analysts","Build UAR Agent dashboard (SQL queries)"]},
-  {id:"bank-email",n:"Bank Email Agent",st:"First Draft",stb:"bb",pri:"P1 - Next Up",prib:"bo",ic:"📝",cat:"progress",tm:"Risk Assessment / FI / Money Risk (Doris)",pl:"Zenpayroll (Rails) + Gumloop",llm:"Existing agents (FraudPaymentReview, SessionsInvestigation)",ds:"Automates payment fraud verification from bank-flagged transactions. Ingests via JPM CSV or Gumloop email flow, orchestrates existing AI agents, produces Release/Hold/Cancel dispositions with human review. 24hr SLA.",im:"Very High — 24hr bank SLA, reduces fraud losses, leverages existing agents",bl:"Engineering review needed, Gumloop API contract, JPM data format",dp:"FraudPaymentReviewAgent, SessionsInvestigationAgent, TranslatorAgent, NachaEntry",doc:"First draft complete, pending engineering review",met:"Processing time (24hr SLA), accuracy, agreement rate, false positive rate",cx:"Large (new model, API, agent orchestration, review queue)",sop:"✅ Desktop Guide, Scorecard, ACH Macros, Bank Email Tracker, Banking Contacts, Gumloop macro.",pur:false,steps:["Engineering review of tech spec","Confirm JPM portal data format","Finalize Gumloop API webhook contract","Build Phase 1 MVP (Gumloop + TranslatorAgent + review queue)"]},
-  {id:"ato-doc",n:"ATO Doc Sub Agent",st:"In Progress",stb:"by",pri:"P1 - Next Up",prib:"bo",ic:"🔨",cat:"progress",tm:"FI (Doris + Pinkham)",pl:"Zenpayroll (Rails) / Gumloop",llm:"TBD (via AiPromptService)",ds:"Documentation sub-agent: converts confirmed ATO data into 3 outputs — (1) Panda ATO Report (23 new SAR fields), (2) SAR narrative (auto ≥$2K), (3) ATOMs Slack blurb. V3 prompt blueprint complete.",im:"Very High — Automates entire ATO case closure pipeline. SAR compliance critical.",bl:"Pinkham implementing 23 new Panda fields + Submit button (started 1/15)",dp:"Panda ATO Report schema update, confirmed ATO trigger, SAR template",doc:"4-phase workback plan. V3 prompt. 23 fields defined. Canonical data model done.",met:"SAR quality (L&C review), data mapping accuracy, automation time",cx:"Large — 4 phases: Data Model → Logic → Integration → Launch",sop:"✅ ATO Desktop Guide, ATO Scorecard, ATO UAR Template, LOI Templates, AML/EDD Referrals, SAR template.",pur:false,steps:["Pinkham: Complete 23 new Panda ATO Report fields + Submit button","Pinkham: Develop structured output prompt + SAR narrative prompt","Doris: Finalize ATOMs Slack blurb prompt","Integrate with Panda API (confirmed ATO trigger)","Build Documentation Agent microservice (Submit → SAR)","Integrate with Slack API (auto-post to ATOMs)","Test against 10 previously confirmed ATO cases","L&C compliance review of SAR output","Define human-in-the-loop protocol for SAR draft","Full production launch"]},
-  {id:"fi-gpt",n:"FI GPT",st:"Not Started",stb:"bgr",pri:"P2 - Build Next",prib:"bb",ic:"⬜",cat:"notstarted",tm:"Trust & Safety / FI / Money Risk",pl:"TBD (RAG-based system)",llm:"TBD",ds:"FI team's AI knowledge base. Ingests ENTIRE SOP house (72+ docs): 18 templates, 11 macros, 15 desktop guides, 13 scorecards, 2 procedures, 6 quick links, 7 AI tooling entries.",im:"Very High — Transforms 72+ SOPs into instant queryable assistant. Accelerates onboarding.",bl:"Architecture decision needed (RAG pipeline, embeddings, hosting)",dp:"Entire SOP house (72+ documents across 7 sheets)",doc:"No tech spec yet. SOP house fully catalogued.",met:"Query accuracy, analyst adoption, time saved, SOP coverage %",cx:"Large — document ingestion, embedding, retrieval, conversational UI",sop:"🟣 USES ENTIRE SOP HOUSE: All 72+ documents across all 7 sheets.",pur:true,steps:["Define architecture (RAG vs fine-tuning vs prompt-stuffing)","Design SOP ingestion pipeline — index all 72+ docs","Build document chunking + embedding strategy","Create conversational interface (Panda / Slack bot / standalone)","Test retrieval accuracy across all 7 SOP categories","Plan update pipeline to keep KB in sync as SOPs change"]},
-  {id:"risk-tracker",n:"Risk Alert / USR Tracker for QC",st:"Not Started",stb:"bgr",pri:"P2 - Build Next",prib:"bb",ic:"⬜",cat:"notstarted",tm:"FI / Trust & Safety",pl:"TBD",llm:"TBD",ds:"QC tracking system for Risk Alerts and USR agent decisions. Dashboard to monitor dispositions, agent accuracy, and QC compliance.",im:"High — Critical for validating AI agent accuracy and QC standards",bl:"Needs requirements gathering and scoping",dp:"USR Agent (live), Investigations Agent, QC Procedure",doc:"No tech spec. Related SOP infrastructure exists.",met:"QC pass rate, agent accuracy vs human, scorecard compliance",cx:"Medium",sop:"✅ USR DG [WIP], Slack Channel Review DG + Scorecard, QC Procedure, all 13 Scorecards.",pur:false,steps:["Define scope: what Risk Alerts and USR metrics to track","Map to existing scorecard categories + QC procedure","Decide platform (Panda dashboard vs standalone)","Write tech spec"]},
-  {id:"uar-qc",n:"UAR QC Agent",st:"Not Started",stb:"bgr",pri:"P2 - After Dependencies",prib:"bb",ic:"⬜",cat:"notstarted",tm:"Risk Assessment / FI",pl:"TBD",llm:"TBD",ds:"QC agent for UAR reports. Leverages edit tracking (uar_edit_histories) to automate QC checks against scorecard criteria.",im:"Medium — Depends on UAR Agent being live first",bl:"Requires UAR Agent live with edit data",dp:"UAR Agent (must be live first)",doc:"No tech spec. Builds on UAR Agent data.",met:"QC pass rate, common edit categories, quality trends",cx:"Medium (extends UAR Agent infra)",sop:"✅ QC Procedure, UAR Scorecards (Standard + Experienced), 11 UAR templates, UAR DG + Reconciliation.",pur:false,steps:["Ship UAR Agent first","Analyze edit tracking data to define QC criteria","Map scorecard rubric to automated checks","Write tech spec"]},
-  {id:"sfdc-qc",n:"Salesforce QC Agent",st:"Not Started",stb:"bgr",pri:"P2 - After Dependencies",prib:"bb",ic:"⬜",cat:"notstarted",tm:"Risk Investigation",pl:"TBD (Gumloop or Rails)",llm:"TBD",ds:"QC agent for Salesforce ticket handling. Monitors resolution quality across all 13 investigation categories.",im:"Medium — Improves ticket quality and compliance",bl:"Needs requirements gathering",dp:"SF Ticket Assigner (live), QC criteria",doc:"No tech spec found.",met:"Ticket quality scores, compliance rate, resolution time",cx:"Medium",sop:"✅ All 13 scorecards, QC Procedure, Investigations Procedure, all Desktop Guides.",pur:false,steps:["Define QC criteria from 13 scorecards","Decide platform (Gumloop vs Rails)","Write tech spec","Build after UAR QC learnings"]},
-  {id:"legal",n:"Legal Report Update",st:"Not Started",stb:"bgr",pri:"P3 - Backlog",prib:"bgr",ic:"⬜",cat:"notstarted",tm:"L&C / Legal",pl:"TBD",llm:"TBD",ds:"Automation for updating legal reports. May relate to LOI documentation, BSA/compliance reporting, or L&C workflows.",im:"TBD — Needs scoping",bl:"Needs requirements gathering",dp:"TBD",doc:"No tech spec found.",met:"TBD",cx:"Unknown",sop:"📝 Possibly: LOI Templates, LOI Scorecard, AML/EDD Referral templates, Referral report.",pur:false,steps:["Scope requirements with Legal/L&C stakeholders","Identify which reports need automation","Check if LOI/referral reporting is the target","Write proposal/tech spec"]}
-];
-const sopData=[{n:"Templates",c:18,d:"UAR templates (11 types), trackers, LOI templates, internal referrals"},{n:"Communication Macros",c:11,d:"Customer/bank comms: LOIs, BEC, ATO, phishing, disputes, bank emails"},{n:"Quick Links",c:6,d:"UAR tracker, banking contacts, BEC tracker, bank email tracker, rotations, referrals"},{n:"Desktop Guides",c:15,d:"Full coverage: ATO, BEC, bank emails, USRs [WIP], UARs, suspicious activity, etc."},{n:"Master Scorecards",c:13,d:"QC rubrics for every investigation type + naming conventions"},{n:"Procedures",c:2,d:"FI Quality Control Procedure, FI Investigations Procedure"},{n:"AI Tooling",c:7,d:"Bank Email Gumloop, SF Ticket Assigner, USR/ATO/Phishing agents, Symphony AI"}];
+const STATUS_OPTIONS = ['Live','In Development','In Progress','First Draft','Not Started'];
+const PRIORITY_OPTIONS = ['Shipped','P0 - Ship Now','P1 - Next Up','P2 - Build Next','P2 - After Dependencies','P3 - Backlog'];
+const COMPLEXITY_OPTIONS = ['Small','Medium','Large','Unknown'];
+const STORAGE_KEY = 'fi-dash-v2';
+const DEFAULT_ICONS = {'Live':'✅','In Development':'🔨','In Progress':'🔨','First Draft':'📝','Not Started':'⬜'};
 
-let state = {checked:{},notes:{},customSteps:{}};
+let projects = [];
+let sopData = [];
+let rationale = '';
+let ui = {checked:{}, notes:{}, customSteps:{}};
 let currentFilter = 'all';
 let selectedId = null;
+let editingId = null;
 
-function loadState(){try{const s=localStorage.getItem('fi-dash-state');if(s)state=JSON.parse(s)}catch(e){}}
-function saveState(){try{localStorage.setItem('fi-dash-state',JSON.stringify(state));document.getElementById('lastSaved').textContent='Last saved: '+new Date().toLocaleString()}catch(e){}}
+function getCategory(status) {
+  if (status === 'Live') return 'live';
+  if (['In Development','In Progress','First Draft'].includes(status)) return 'progress';
+  return 'notstarted';
+}
+function getStatusBadge(status) {
+  const map = {'Live':'badge-live','In Development':'badge-progress','In Progress':'badge-progress','First Draft':'badge-draft','Not Started':'badge-notstarted'};
+  return map[status] || 'badge-notstarted';
+}
+function getPriorityBadge(pri) {
+  if (pri.startsWith('Ship')) return 'badge-shipped';
+  if (pri.startsWith('P0')) return 'badge-p0';
+  if (pri.startsWith('P1')) return 'badge-p1';
+  if (pri.startsWith('P2')) return 'badge-p2';
+  return 'badge-p3';
+}
+function getSteps(p) { return [...p.steps, ...(ui.customSteps[p.id]||[])]; }
+function isChecked(pid,i) { return !!(ui.checked[pid] && ui.checked[pid][i]); }
+function getProgress(p) {
+  const s = getSteps(p);
+  if (!s.length) return 0;
+  let d = 0;
+  s.forEach((_,i) => { if (isChecked(p.id,i)) d++; });
+  return Math.round(d/s.length*100);
+}
+function generateId(name) {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + Date.now().toString(36);
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
 
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2000)}
+function saveData() {
+  const data = { projects, sopData, rationale, ui, version: 2 };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  const ts = new Date().toLocaleString();
+  document.getElementById('lastSaved').textContent = 'Auto-saved: ' + ts;
+}
 
-function exportData(){const d=JSON.stringify(state,null,2);const b=new Blob([d],{type:'application/json'});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download='fi-projects-state-'+new Date().toISOString().split('T')[0]+'.json';a.click();URL.revokeObjectURL(u);toast('✅ Exported!')}
-function importData(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=function(ev){try{state=JSON.parse(ev.target.result);saveState();render();toast('✅ Imported!')}catch(er){toast('❌ Invalid file')}};r.readAsText(f);e.target.value=''}
+async function loadData() {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored) {
+    try {
+      const data = JSON.parse(stored);
+      projects = data.projects || [];
+      sopData = data.sopData || [];
+      rationale = data.rationale || '';
+      ui = data.ui || {checked:{}, notes:{}, customSteps:{}};
+      render();
+      return;
+    } catch(e) { /* fall through to defaults */ }
+  }
+  await loadDefaults();
+}
 
-function getSteps(p){return[...p.steps,...(state.customSteps[p.id]||[])]}
-function getChecked(pid,i){return!!(state.checked[pid]&&state.checked[pid][i])}
-function getProgress(p){const s=getSteps(p);if(!s.length)return 0;let d=0;s.forEach((_,i)=>{if(getChecked(p.id,i))d++});return Math.round(d/s.length*100)}
-function toggleCheck(pid,i){if(!state.checked[pid])state.checked[pid]={};state.checked[pid][i]=!state.checked[pid][i];saveState();render()}
-function updateNotes(pid,val){state.notes[pid]=val;saveState();const el=document.getElementById('saved-'+pid);if(el){el.classList.add('show');setTimeout(()=>el.classList.remove('show'),1500)}}
-function addStep(pid){const inp=document.getElementById('new-step-'+pid);const v=inp.value.trim();if(!v)return;if(!state.customSteps[pid])state.customSteps[pid]=[];state.customSteps[pid].push(v);inp.value='';saveState();render();setTimeout(()=>{const el=document.getElementById('card-'+pid);if(el&&!el.querySelector('.pc-det.open')){el.querySelector('.pc-hdr').click()}},50)}
-function removeStep(pid,i,p){const base=p.steps.length;const ci=i-base;if(ci>=0&&state.customSteps[pid]){state.customSteps[pid].splice(ci,1);if(state.checked[pid]){const nc={};Object.keys(state.checked[pid]).forEach(k=>{const ki=parseInt(k);if(ki<i)nc[k]=state.checked[pid][k];else if(ki>i)nc[ki-1]=state.checked[pid][k]});state.checked[pid]=nc}saveState();render()}}
-function toggleCard(id){selectedId=selectedId===id?null:id;render()}
-function setFilter(f,btn){currentFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render()}
-function switchTab(t){document.getElementById('tab-projects').classList.toggle('hidden',t!=='projects');document.getElementById('tab-sop').classList.toggle('hidden',t!=='sop');document.getElementById('tab-btn-projects').classList.toggle('active',t==='projects');document.getElementById('tab-btn-sop').classList.toggle('active',t==='sop')}
+async function loadDefaults() {
+  try {
+    const resp = await fetch('data.json');
+    const data = await resp.json();
+    projects = data.projects || [];
+    sopData = data.sopData || [];
+    rationale = data.rationale || '';
+  } catch(e) {
+    projects = [];
+    sopData = [];
+    rationale = '';
+  }
+  ui = {checked:{}, notes:{}, customSteps:{}};
+  saveData();
+  render();
+}
 
-function render(){
-  // Stats
-  let totalSteps=0,totalDone=0;
-  P.forEach(p=>{const s=getSteps(p);s.forEach((_,i)=>{totalSteps++;if(getChecked(p.id,i))totalDone++})});
-  document.getElementById('s-pct').textContent=totalSteps?Math.round(totalDone/totalSteps*100)+'%':'0%';
+async function resetData() {
+  if (!confirm('Reset all changes and reload original data? Your edits, notes, and progress will be cleared.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  await loadDefaults();
+  showToast('🔄 Reset to defaults!');
+}
 
-  // Priority bar
-  const pb=document.getElementById('priBar');pb.innerHTML='';
-  P.forEach(function(p,i){
-    var d=document.createElement('div');d.className='pri-item'+(selectedId===p.id?' act':'');
-    d.onclick=function(){toggleCard(p.id)};
-    var pct=getProgress(p);
-    var pColor=pct===100?'#16a34a':pct>0?'#6366f1':'#e2e8f0';
-    d.innerHTML='<span class="pri-num">'+(i+1)+'</span><div style="flex:1"><div class="pri-name">'+p.n+'</div><div class="pri-label">'+p.pri+'</div><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+pColor+'"></div></div></div>';
+function exportData() {
+  const data = { projects, sopData, rationale, ui, exportedAt: new Date().toISOString(), version: 2 };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'fi-projects-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('📥 Exported successfully!');
+}
+
+function importData(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      projects = data.projects || projects;
+      sopData = data.sopData || sopData;
+      rationale = data.rationale || rationale;
+      ui = data.ui || ui;
+      saveData();
+      render();
+      showToast('📤 Imported successfully!');
+    } catch(err) { showToast('❌ Invalid file format'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function switchTab(t) {
+  document.getElementById('tabProjects').classList.toggle('hidden', t !== 'projects');
+  document.getElementById('tabSop').classList.toggle('hidden', t !== 'sop');
+  document.getElementById('tabBtnProjects').classList.toggle('active', t === 'projects');
+  document.getElementById('tabBtnSop').classList.toggle('active', t === 'sop');
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  render();
+}
+
+function toggleCard(id) {
+  selectedId = selectedId === id ? null : id;
+  render();
+}
+
+function toggleCheck(pid, i) {
+  if (!ui.checked[pid]) ui.checked[pid] = {};
+  ui.checked[pid][i] = !ui.checked[pid][i];
+  saveData();
+  render();
+}
+
+function updateNotes(pid, val) {
+  ui.notes[pid] = val;
+  saveData();
+  const el = document.getElementById('saved-' + pid);
+  if (el) { el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 1500); }
+}
+
+function addStep(pid) {
+  const inp = document.getElementById('new-step-' + pid);
+  const v = inp.value.trim();
+  if (!v) return;
+  if (!ui.customSteps[pid]) ui.customSteps[pid] = [];
+  ui.customSteps[pid].push(v);
+  inp.value = '';
+  saveData();
+  render();
+  setTimeout(() => {
+    const el = document.getElementById('card-' + pid);
+    if (el && !el.querySelector('.pc-det.open')) el.querySelector('.pc-hdr').click();
+  }, 50);
+}
+
+function removeStep(pid, i) {
+  const p = projects.find(x => x.id === pid);
+  if (!p) return;
+  const baseLen = p.steps.length;
+  const ci = i - baseLen;
+  if (ci >= 0 && ui.customSteps[pid]) {
+    ui.customSteps[pid].splice(ci, 1);
+    if (ui.checked[pid]) {
+      const nc = {};
+      Object.keys(ui.checked[pid]).forEach(k => {
+        const ki = parseInt(k);
+        if (ki < i) nc[ki] = ui.checked[pid][k];
+        else if (ki > i) nc[ki - 1] = ui.checked[pid][k];
+      });
+      ui.checked[pid] = nc;
+    }
+    saveData();
+    render();
+  }
+}
+
+function progressRing(pct, size) {
+  const r = (size - 4) / 2;
+  const c = 2 * Math.PI * r;
+  const offset = c - (pct / 100) * c;
+  const color = pct === 100 ? 'var(--green)' : pct > 0 ? 'var(--coral)' : 'var(--border)';
+  return '<svg class="progress-ring" width="'+size+'" height="'+size+'" viewBox="0 0 '+size+' '+size+'">' +
+    '<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="var(--border)" stroke-width="3.5"/>' +
+    '<circle cx="'+(size/2)+'" cy="'+(size/2)+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="3.5" ' +
+    'stroke-dasharray="'+c+'" stroke-dashoffset="'+offset+'" stroke-linecap="round" transform="rotate(-90 '+(size/2)+' '+(size/2)+')"/>' +
+    '</svg>';
+}
+
+function openEditModal(id) {
+  editingId = id;
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = 'Edit Project';
+  document.getElementById('modalDelete').style.display = '';
+  renderModalForm(p);
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function openAddModal() {
+  editingId = 'new';
+  document.getElementById('modalTitle').textContent = 'Add New Project';
+  document.getElementById('modalDelete').style.display = 'none';
+  renderModalForm({
+    id:'', name:'', status:'Not Started', priority:'P3 - Backlog', icon:'⬜',
+    team:'', platform:'TBD', llm:'TBD', description:'', impact:'',
+    blockers:'', dependencies:'', documentation:'', metrics:'',
+    complexity:'Unknown', sopCoverage:'', usesFullSop:false, steps:[]
+  });
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  editingId = null;
+}
+
+function renderModalForm(p) {
+  const statusOpts = STATUS_OPTIONS.map(s => '<option value="'+s+'"'+(s===p.status?' selected':'')+'>'+s+'</option>').join('');
+  const priOpts = PRIORITY_OPTIONS.map(s => '<option value="'+s+'"'+(s===p.priority?' selected':'')+'>'+s+'</option>').join('');
+  const cxOpts = COMPLEXITY_OPTIONS.map(s => '<option value="'+s+'"'+(s===p.complexity?' selected':'')+'>'+s+'</option>').join('');
+
+  document.getElementById('modalBody').innerHTML =
+    '<div class="form-row cols-3">' +
+      '<div class="form-group"><label class="form-label">Icon</label><input id="f-icon" class="form-input form-input-sm" value="'+p.icon+'"></div>' +
+      '<div class="form-group" style="grid-column:span 2"><label class="form-label">Project Name</label><input id="f-name" class="form-input" value="'+(p.name||'').replace(/"/g,'&quot;')+'"></div>' +
+    '</div>' +
+    '<div class="form-row cols-3">' +
+      '<div class="form-group"><label class="form-label">Status</label><select id="f-status" class="form-select">'+statusOpts+'</select></div>' +
+      '<div class="form-group"><label class="form-label">Priority</label><select id="f-priority" class="form-select">'+priOpts+'</select></div>' +
+      '<div class="form-group"><label class="form-label">Complexity</label><select id="f-complexity" class="form-select">'+cxOpts+'</select></div>' +
+    '</div>' +
+    '<div class="form-row cols-2">' +
+      '<div class="form-group"><label class="form-label">Team / DRI</label><input id="f-team" class="form-input" value="'+(p.team||'').replace(/"/g,'&quot;')+'"></div>' +
+      '<div class="form-group"><label class="form-label">Platform</label><input id="f-platform" class="form-input" value="'+(p.platform||'').replace(/"/g,'&quot;')+'"></div>' +
+    '</div>' +
+    '<div class="form-row cols-2">' +
+      '<div class="form-group"><label class="form-label">LLM</label><input id="f-llm" class="form-input" value="'+(p.llm||'').replace(/"/g,'&quot;')+'"></div>' +
+      '<div class="form-group"><label class="form-label">Dependencies</label><input id="f-deps" class="form-input" value="'+(p.dependencies||'').replace(/"/g,'&quot;')+'"></div>' +
+    '</div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">Description</label><textarea id="f-desc" class="form-textarea">'+(p.description||'')+'</textarea></div></div>' +
+    '<div class="form-row cols-2">' +
+      '<div class="form-group"><label class="form-label">Impact</label><textarea id="f-impact" class="form-textarea" style="min-height:56px">'+(p.impact||'')+'</textarea></div>' +
+      '<div class="form-group"><label class="form-label">Blockers</label><textarea id="f-blockers" class="form-textarea" style="min-height:56px">'+(p.blockers||'')+'</textarea></div>' +
+    '</div>' +
+    '<div class="form-row cols-2">' +
+      '<div class="form-group"><label class="form-label">Documentation Status</label><input id="f-doc" class="form-input" value="'+(p.documentation||'').replace(/"/g,'&quot;')+'"></div>' +
+      '<div class="form-group"><label class="form-label">Key Metrics</label><input id="f-metrics" class="form-input" value="'+(p.metrics||'').replace(/"/g,'&quot;')+'"></div>' +
+    '</div>' +
+    '<div class="form-row"><div class="form-group"><label class="form-label">SOP Coverage</label><textarea id="f-sop" class="form-textarea" style="min-height:56px">'+(p.sopCoverage||'')+'</textarea></div></div>' +
+    '<div class="form-row"><label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--purple);cursor:pointer">' +
+      '<input type="checkbox" id="f-fullsop"'+(p.usesFullSop?' checked':'')+' style="accent-color:var(--purple);width:18px;height:18px">' +
+      '🟣 Uses Entire SOP House' +
+    '</label></div>';
+}
+
+function saveModal() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { showToast('❌ Project name is required'); return; }
+
+  const data = {
+    name: name,
+    icon: document.getElementById('f-icon').value.trim() || '⬜',
+    status: document.getElementById('f-status').value,
+    priority: document.getElementById('f-priority').value,
+    complexity: document.getElementById('f-complexity').value,
+    team: document.getElementById('f-team').value.trim(),
+    platform: document.getElementById('f-platform').value.trim(),
+    llm: document.getElementById('f-llm').value.trim(),
+    dependencies: document.getElementById('f-deps').value.trim(),
+    description: document.getElementById('f-desc').value.trim(),
+    impact: document.getElementById('f-impact').value.trim(),
+    blockers: document.getElementById('f-blockers').value.trim(),
+    documentation: document.getElementById('f-doc').value.trim(),
+    metrics: document.getElementById('f-metrics').value.trim(),
+    sopCoverage: document.getElementById('f-sop').value.trim(),
+    usesFullSop: document.getElementById('f-fullsop').checked
+  };
+
+  if (editingId === 'new') {
+    data.id = generateId(name);
+    data.steps = [];
+    projects.push(data);
+    showToast('✅ Project added!');
+  } else {
+    const idx = projects.findIndex(x => x.id === editingId);
+    if (idx >= 0) {
+      Object.assign(projects[idx], data);
+      showToast('✅ Changes saved!');
+    }
+  }
+  saveData();
+  closeModal();
+  render();
+}
+
+function deleteProject() {
+  if (!editingId || editingId === 'new') return;
+  const p = projects.find(x => x.id === editingId);
+  if (!p) return;
+  if (!confirm('Delete "' + p.name + '"? This cannot be undone.')) return;
+  projects = projects.filter(x => x.id !== editingId);
+  delete ui.checked[editingId];
+  delete ui.notes[editingId];
+  delete ui.customSteps[editingId];
+  saveData();
+  closeModal();
+  if (selectedId === editingId) selectedId = null;
+  render();
+  showToast('🗑️ Project deleted');
+}
+
+function render() {
+  const live = projects.filter(p => getCategory(p.status) === 'live').length;
+  const prog = projects.filter(p => getCategory(p.status) === 'progress').length;
+  const notst = projects.filter(p => getCategory(p.status) === 'notstarted').length;
+  let totalSteps = 0, totalDone = 0;
+  projects.forEach(p => {
+    const s = getSteps(p);
+    s.forEach((_, i) => { totalSteps++; if (isChecked(p.id, i)) totalDone++; });
+  });
+  const overallPct = totalSteps ? Math.round(totalDone / totalSteps * 100) : 0;
+
+  document.getElementById('projectCount').textContent = projects.length;
+
+  document.getElementById('statsRow').innerHTML =
+    '<div class="stat green"><div class="stat-n">' + live + '</div><div class="stat-l">✅ Live</div></div>' +
+    '<div class="stat amber"><div class="stat-n">' + prog + '</div><div class="stat-l">🔨 In Progress</div></div>' +
+    '<div class="stat gray"><div class="stat-n">' + notst + '</div><div class="stat-l">⬜ Not Started</div></div>' +
+    '<div class="stat coral"><div class="stat-n">' + overallPct + '%</div><div class="stat-l">Overall Steps Done</div></div>';
+
+  const filters = [['all','All'],['live','✅ Live'],['progress','🔨 In Progress'],['notstarted','⬜ Not Started']];
+  document.getElementById('filterBar').innerHTML = filters.map(f =>
+    '<button class="filter-pill' + (currentFilter === f[0] ? ' active' : '') + '" onclick="setFilter(\'' + f[0] + '\')">' + f[1] + '</button>'
+  ).join('');
+
+  const pb = document.getElementById('priBar');
+  pb.innerHTML = '';
+  projects.forEach((p, i) => {
+    const pct = getProgress(p);
+    const d = document.createElement('div');
+    d.className = 'pri-item' + (selectedId === p.id ? ' act' : '');
+    d.onclick = () => toggleCard(p.id);
+    d.innerHTML = '<div class="pri-num">' + (i + 1) + '</div><div><div class="pri-name">' + p.name + '</div><div class="pri-label">' + p.priority + '</div></div>';
     pb.appendChild(d);
   });
 
-  // Project cards
-  const pc=document.getElementById('projectCards');pc.innerHTML='';
-  P.forEach((p,idx)=>{
-    if(currentFilter!=='all'&&p.cat!==currentFilter)return;
-    const open=selectedId===p.id;
-    const pct=getProgress(p);
-    const steps=getSteps(p);
-    let stepsHtml=steps.map((s,i)=>{
-      const chk=getChecked(p.id,i);
-      const isCustom=i>=p.steps.length;
-      return'<div class="step'+(chk?' done':'')+'"><input type="checkbox" '+(chk?'checked ':'')+' onchange="toggleCheck(\''+p.id+'\','+i+')"><span class="step-text">'+s+'</span>'+(isCustom?'<button onclick="event.stopPropagation();removeStep(\''+p.id+'\','+i+',P['+idx+'])" style="background:none;border:none;color:#94a3b8;cursor:pointer;font-size:16px" title="Remove">×</button>':'')+'</div>';
+  document.getElementById('rationaleBox').textContent = rationale;
+
+  const pc = document.getElementById('projectCards');
+  pc.innerHTML = '';
+  projects.forEach((p, idx) => {
+    const cat = getCategory(p.status);
+    if (currentFilter !== 'all' && cat !== currentFilter) return;
+    const open = selectedId === p.id;
+    const pct = getProgress(p);
+    const steps = getSteps(p);
+    const doneCount = steps.filter((_, i) => isChecked(p.id, i)).length;
+
+    let stepsHtml = steps.map((s, i) => {
+      const chk = isChecked(p.id, i);
+      const isCustom = i >= p.steps.length;
+      return '<div class="step' + (chk ? ' done' : '') + '">' +
+        '<input type="checkbox" ' + (chk ? 'checked' : '') + ' onchange="toggleCheck(\'' + p.id + '\',' + i + ')">' +
+        '<span class="step-text">' + s + '</span>' +
+        (isCustom ? '<button class="step-remove" onclick="removeStep(\'' + p.id + '\',' + i + ')" title="Remove">×</button>' : '') +
+        '</div>';
     }).join('');
 
-    const card=document.createElement('div');card.className='pc'+(open?' act':'');card.id='card-'+p.id;
-    var doneCount=steps.filter(function(_,i){return getChecked(p.id,i)}).length;
-    var pColor=pct===100?'#16a34a':pct>0?'#6366f1':'#e2e8f0';
-    var h='<div class="pc-hdr" onclick="toggleCard(\''+p.id+'\')">';
-    h+='<div class="pc-left"><span class="pc-icon">'+p.ic+'</span><div class="pc-info">';
-    h+='<div class="pc-title">'+p.n+'</div>';
-    h+='<div class="pc-desc">'+p.ds.substring(0,100)+'...</div>';
-    h+='<div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%;background:'+pColor+'"></div></div>';
-    h+='<div class="progress-text">'+pct+'% complete ('+doneCount+'/'+steps.length+' steps)</div>';
-    h+='</div></div>';
-    h+='<div class="pc-badges"><span class="badge '+p.stb+'">'+p.st+'</span>';
-    h+='<span class="badge '+p.prib+'">'+p.pri+'</span>';
-    h+='<span class="arrow'+(open?' open':'')+'">▼</span></div></div>';
-    h+='<div class="pc-det'+(open?' open':'')+'">';
-    h+='<div class="det-grid">';
-    h+='<div><div class="det-lbl">Platform</div><div class="det-val">'+p.pl+'</div></div>';
-    h+='<div><div class="det-lbl">LLM</div><div class="det-val">'+p.llm+'</div></div>';
-    h+='<div><div class="det-lbl">Team / DRI</div><div class="det-val">'+p.tm+'</div></div>';
-    h+='<div><div class="det-lbl">Complexity</div><div class="det-val">'+p.cx+'</div></div>';
-    h+='</div>';
-    h+='<div style="margin-top:16px"><div class="det-lbl">Full Description</div><div class="det-val">'+p.ds+'</div></div>';
-    h+='<div class="sop-box'+(p.pur?' pur':'')+'"><div class="sop-lbl">📚 SOP House Coverage</div><div class="det-val">'+p.sop+'</div></div>';
-    h+='<div class="det-grid" style="margin-top:16px">';
-    h+='<div><div class="det-lbl">Impact</div><div class="det-val">'+p.im+'</div></div>';
-    h+='<div><div class="det-lbl">Blockers</div><div class="det-val red">'+p.bl+'</div></div>';
-    h+='</div>';
-    h+='<div style="margin-top:16px"><div class="det-lbl">Dependencies</div><div class="det-val">'+p.dp+'</div></div>';
-    h+='<div class="det-grid" style="margin-top:16px">';
-    h+='<div><div class="det-lbl">Doc Status</div><div class="det-val">'+p.doc+'</div></div>';
-    h+='<div><div class="det-lbl">Key Metrics</div><div class="det-val">'+p.met+'</div></div>';
-    h+='</div>';
-    h+='<div class="steps"><div class="steps-title">✅ Next Steps (click to check off)</div>'+stepsHtml;
-    h+='<div class="add-step"><input type="text" id="new-step-'+p.id+'" placeholder="Add a custom step..." onkeydown="if(event.key===\'Enter\')addStep(\''+p.id+'\')"><button onclick="addStep(\''+p.id+'\')">+ Add</button></div>';
-    h+='</div>';
-    h+='<div class="notes-section"><div class="notes-title">📝 Notes</div>';
-    h+='<textarea class="notes-area" placeholder="Add project notes, updates, meeting outcomes..." oninput="updateNotes(\''+p.id+'\',this.value)">'+(state.notes[p.id]||'')+'</textarea>';
-    h+='<div class="notes-saved" id="saved-'+p.id+'">✅ Saved</div>';
-    h+='</div></div>';
-    card.innerHTML=h;
+    const sopBoxClass = p.usesFullSop ? 'sop-box purple' : 'sop-box green';
+
+    const card = document.createElement('div');
+    card.className = 'pc' + (open ? ' act' : '');
+    card.id = 'card-' + p.id;
+
+    let h = '<div class="pc-hdr" onclick="toggleCard(\'' + p.id + '\')">';
+    h += '<div class="pc-left">';
+    h += '<div class="pc-icon">' + p.icon + '</div>';
+    h += '<div class="pc-info"><div class="pc-title">' + p.name + '</div>';
+    h += '<div class="pc-desc">' + (p.description || '').substring(0, 120) + '...</div></div>';
+    h += '</div>';
+    h += '<div class="pc-right">';
+    h += '<div class="pc-progress">' + progressRing(pct, 36) + '<span class="progress-pct">' + pct + '%</span></div>';
+    h += '<span class="badge ' + getStatusBadge(p.status) + '">' + p.status + '</span>';
+    h += '<span class="badge ' + getPriorityBadge(p.priority) + '">' + p.priority + '</span>';
+    h += '<button class="edit-btn" onclick="event.stopPropagation();openEditModal(\'' + p.id + '\')" title="Edit project">✏️</button>';
+    h += '<span class="arrow' + (open ? ' open' : '') + '">▼</span>';
+    h += '</div></div>';
+
+    h += '<div class="pc-det' + (open ? ' open' : '') + '">';
+    h += '<div class="det-grid">';
+    h += '<div><div class="det-lbl">Platform</div><div class="det-val">' + p.platform + '</div></div>';
+    h += '<div><div class="det-lbl">LLM</div><div class="det-val">' + p.llm + '</div></div>';
+    h += '<div><div class="det-lbl">Team / DRI</div><div class="det-val">' + p.team + '</div></div>';
+    h += '<div><div class="det-lbl">Complexity</div><div class="det-val">' + p.complexity + '</div></div>';
+    h += '<div class="det-full"><div class="det-lbl">Full Description</div><div class="det-val">' + p.description + '</div></div>';
+    h += '<div class="det-full"><div class="' + sopBoxClass + '"><div class="sop-lbl">📚 SOP House Coverage</div><div class="sop-val">' + p.sopCoverage + '</div></div></div>';
+    h += '<div><div class="det-lbl">Impact</div><div class="det-val">' + p.impact + '</div></div>';
+    h += '<div><div class="det-lbl">Blockers</div><div class="det-val" style="color:var(--red)">' + p.blockers + '</div></div>';
+    h += '<div><div class="det-lbl">Dependencies</div><div class="det-val">' + p.dependencies + '</div></div>';
+    h += '<div><div class="det-lbl">Documentation</div><div class="det-val">' + p.documentation + '</div></div>';
+    h += '<div class="det-full"><div class="det-lbl">Key Metrics</div><div class="det-val">' + p.metrics + '</div></div>';
+    h += '</div>';
+
+    h += '<div class="steps"><div class="steps-title">✅ Next Steps (' + doneCount + '/' + steps.length + ' complete)</div>';
+    h += stepsHtml;
+    h += '<div class="add-step"><input id="new-step-' + p.id + '" placeholder="Add a new step..." onkeydown="if(event.key===\'Enter\')addStep(\'' + p.id + '\')">';
+    h += '<button onclick="addStep(\'' + p.id + '\')">+ Add</button></div></div>';
+
+    h += '<div class="notes-section"><div class="notes-title">📝 Notes</div>';
+    h += '<textarea class="notes-area" placeholder="Add notes about this project..." oninput="updateNotes(\'' + p.id + '\',this.value)">' + (ui.notes[p.id] || '') + '</textarea>';
+    h += '<div class="notes-saved" id="saved-' + p.id + '">✅ Saved</div></div>';
+
+    h += '</div>';
+    card.innerHTML = h;
     pc.appendChild(card);
   });
 
-  // SOP sheets
-  const ss=document.getElementById('sopSheets');ss.innerHTML='';
-  sopData.forEach(function(s){
-    ss.innerHTML+='<div class="sop-sheet"><div class="sop-ct">'+s.c+'</div><div><div style="font-weight:600;font-size:14px">'+s.n+'</div><div style="font-size:12px;color:#64748b;margin-top:2px">'+s.d+'</div></div></div>';
+  const ss = document.getElementById('sopSheets');
+  ss.innerHTML = '';
+  sopData.forEach(s => {
+    ss.innerHTML += '<div class="sop-sheet"><div class="sop-ct">' + s.count + '</div><div class="sop-info"><div class="sop-name">' + s.name + '</div><div class="sop-desc">' + s.description + '</div></div></div>';
   });
+
+  document.getElementById('depMap').innerHTML =
+    '<span class="dep-live">SF Ticket Assigner (✅ Live)</span> ───→ <span class="dep-hl">Salesforce QC Agent</span><br>' +
+    'UAR Agent (In Dev) ───→ <span class="dep-hl">UAR QC Agent</span><br>' +
+    'Bank Email Agent (Draft) ───→ uses FraudPaymentReview + SessionsInvestigation agents<br>' +
+    'ATO Doc Sub Agent (In Progress) ───→ Panda ATO Report + SAR + ATOMs Slack<br>' +
+    '<span class="dep-hl">FI GPT (Not Started)</span> ───→ Ingests ALL 72+ SOP docs ───→ Team knowledge base<br>' +
+    '&nbsp;&nbsp;└─→ Can inform: UAR QC, SFDC QC, Risk Alert Tracker, onboarding<br>' +
+    'USR Agent + Investigations Agent ───→ <span class="dep-hl">Risk Alert / USR Tracker for QC</span><br>' +
+    'Legal Report Update ───→ <em>Needs scoping (possibly LOIs/referrals)</em>';
 }
 
-loadState();render();
+loadData();
 </script>
 </body>
 </html>
