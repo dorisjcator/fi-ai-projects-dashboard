@@ -852,7 +852,15 @@ function render() {
     const steps = getSteps(p);
     const doneCount = steps.filter((_, i) => isChecked(p.id, i)).length;
 
-    let stepsHtml = steps.map((s, i) => {
+    const stepIndexes = steps.map((s, i) => i);
+    stepIndexes.sort((a, b) => {
+      const ca = isChecked(p.id, a) ? 0 : 1;
+      const cb = isChecked(p.id, b) ? 0 : 1;
+      if (ca !== cb) return ca - cb;
+      return a - b;
+    });
+    let stepsHtml = stepIndexes.map(i => {
+      const s = steps[i];
       const chk = isChecked(p.id, i);
       return '<div class="step' + (chk ? ' done' : '') + '">' +
         '<input type="checkbox" ' + (chk ? 'checked' : '') + ' onchange="toggleCheck(\'' + p.id + '\',' + i + ')">' +
