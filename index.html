@@ -199,6 +199,10 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
 .sop-doc-link:hover { text-decoration:underline; }
 .sop-master-btn { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, var(--coral), var(--coral-light)); color:white; border:none; border-radius:10px; padding:10px 20px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; transition:all 0.2s; margin-bottom:20px; box-shadow:var(--shadow-coral); }
 .sop-master-btn:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(255,107,80,0.3); }
+.del-btn { background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px; padding:4px 6px; border-radius:6px; transition:all 0.15s; line-height:1; }
+.del-btn:hover { background:var(--red-bg); color:var(--red); }
+.sop-doc .del-btn { font-size:14px; }
+.sop-hdr .del-btn { font-size:18px; }
 
 .sop-mapping { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
 .sop-map-card { padding:20px; border-radius:12px; font-size:13px; line-height:1.8; }
@@ -333,14 +337,7 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
   </div>
   <div class="card">
     <h3>🔗 SOP → AI Project Mapping</h3>
-    <div class="sop-mapping">
-      <div class="sop-map-card sop-m1"><h4>UAR Agent touches:</h4>• 11 UAR templates (all fraud types)<br>• UAR Desktop Guide + Reconciliation Guide<br>• UAR Scorecards (Standard + Experienced)<br>• Exposure Calculation workbook<br>• FY26 UAR tracker (Quick Links)</div>
-      <div class="sop-map-card sop-m2"><h4>Bank Email Agent touches:</h4>• Bank Emails Desktop Guide<br>• Bank Email Scorecard<br>• ACH Response Macros<br>• Bank Email Tracker (Quick Links)<br>• Banking Contacts (Quick Links)<br>• Gumloop extraction macro (AI Tooling)</div>
-      <div class="sop-map-card sop-m3"><h4>🟣 FI GPT — USES ENTIRE SOP HOUSE:</h4>• ALL 18 templates<br>• ALL 11 communication macros<br>• ALL 15 desktop guides<br>• ALL 13 master scorecards<br>• Both procedures (QC + Investigations)<br>• ALL 6 quick links + ALL 7 AI tooling entries<br><strong>72+ documents — the team's AI brain</strong></div>
-      <div class="sop-map-card sop-m4"><h4>Risk Alert / USR Tracker for QC:</h4>• Slack Channel Review DG + Scorecard<br>• USR Desktop Guide [WIP]<br>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• FI Investigations Procedure</div>
-      <div class="sop-map-card sop-m5"><h4>QC Agents (UAR + SFDC):</h4>• FI Quality Control Procedure<br>• All 13 Master Scorecards<br>• Every Desktop Guide (QC criteria)<br>• FI Investigations Procedure</div>
-      <div class="sop-map-card sop-m6"><h4>Legal Report Update may touch:</h4>• LOI Templates (Chase/PNC + DocuSign)<br>• LOI Scorecard<br>• AML/EDD Internal Referral templates<br>• Referral fraud detection report</div>
-    </div>
+    <div class="sop-mapping" id="sopMappingCards"></div>
   </div>
 </div>
 
@@ -354,6 +351,7 @@ const DEFAULT_ICONS = {'Live':'✅','In Development':'🔨','In Progress':'🔨'
 let projects = [];
 let sopData = [];
 let sopSheetUrl = '';
+let sopMappings = [];
 let rationale = '';
 let ui = {checked:{}, notes:{}, customSteps:{}};
 let currentFilter = 'all';
@@ -420,7 +418,7 @@ function saveData() {
     return false;
   }
   try {
-    const data = { projects, sopData, sopSheetUrl, rationale, ui, version: 3 };
+    const data = { projects, sopData, sopSheetUrl, sopMappings, rationale, ui, version: 3 };
     const json = JSON.stringify(data);
     localStorage.setItem(STORAGE_KEY, json);
     const verify = localStorage.getItem(STORAGE_KEY);
@@ -453,15 +451,18 @@ async function loadData() {
           if (data.version >= 3 && data.sopData && data.sopData.length && data.sopData[0].documents) {
             sopData = data.sopData;
             sopSheetUrl = data.sopSheetUrl || '';
+            sopMappings = data.sopMappings || [];
           } else {
             try {
               const resp = await fetch('data.json?v=' + Date.now());
               const fresh = await resp.json();
               sopData = fresh.sopData || [];
               sopSheetUrl = fresh.sopSheetUrl || '';
+              sopMappings = fresh.sopMappings || [];
             } catch(e) {
               sopData = data.sopData || [];
               sopSheetUrl = data.sopSheetUrl || '';
+              sopMappings = data.sopMappings || [];
             }
           }
           render();
@@ -482,11 +483,13 @@ async function loadDefaults() {
     projects = data.projects || [];
     sopData = data.sopData || [];
     sopSheetUrl = data.sopSheetUrl || '';
+    sopMappings = data.sopMappings || [];
     rationale = data.rationale || '';
   } catch(e) {
     projects = [];
     sopData = [];
     sopSheetUrl = '';
+    sopMappings = [];
     rationale = '';
   }
   ui = {checked:{}, notes:{}, customSteps:{}};
@@ -504,7 +507,7 @@ async function resetData() {
 setInterval(function() { if (storageAvailable && projects.length > 0) saveData(); }, 30000);
 
 function exportData() {
-  const data = { projects, sopData, sopSheetUrl, rationale, ui, exportedAt: new Date().toISOString(), version: 3 };
+  const data = { projects, sopData, sopSheetUrl, sopMappings, rationale, ui, exportedAt: new Date().toISOString(), version: 3 };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -525,6 +528,7 @@ function importData(e) {
       projects = data.projects || projects;
       sopData = data.sopData || sopData;
       sopSheetUrl = data.sopSheetUrl || sopSheetUrl;
+      sopMappings = data.sopMappings || sopMappings;
       rationale = data.rationale || rationale;
       ui = data.ui || ui;
       saveData();
@@ -560,6 +564,47 @@ function toggleSopDocs(idx) {
   if (arrow) { arrow.classList.toggle('open'); }
 }
 
+function removeSopDoc(catIdx, docIdx) {
+  if (!sopData[catIdx] || !sopData[catIdx].documents) return;
+  sopData[catIdx].documents.splice(docIdx, 1);
+  sopData[catIdx].count = sopData[catIdx].documents.length;
+  saveData();
+  render();
+  showToast('🗑️ Document removed');
+}
+
+function removeSopCategory(catIdx) {
+  if (!sopData[catIdx]) return;
+  if (!confirm('Delete the "' + sopData[catIdx].name + '" category and all its documents?')) return;
+  sopData.splice(catIdx, 1);
+  saveData();
+  render();
+  showToast('🗑️ Category removed');
+}
+
+function removeSopMapping(idx) {
+  if (!sopMappings[idx]) return;
+  if (!confirm('Delete the "' + sopMappings[idx].title.replace(/:$/, '') + '" mapping card?')) return;
+  sopMappings.splice(idx, 1);
+  saveData();
+  render();
+  showToast('🗑️ Mapping card removed');
+}
+
+function quickDeleteProject(id) {
+  const p = projects.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm('Delete "' + p.name + '"? This cannot be undone.')) return;
+  projects = projects.filter(x => x.id !== id);
+  delete ui.checked[id];
+  delete ui.notes[id];
+  delete ui.customSteps[id];
+  if (selectedId === id) selectedId = null;
+  saveData();
+  render();
+  showToast('🗑️ Project deleted');
+}
+
 function toggleCheck(pid, i) {
   if (!ui.checked[pid]) ui.checked[pid] = {};
   ui.checked[pid][i] = !ui.checked[pid][i];
@@ -593,21 +638,23 @@ function removeStep(pid, i) {
   const p = projects.find(x => x.id === pid);
   if (!p) return;
   const baseLen = p.steps.length;
-  const ci = i - baseLen;
-  if (ci >= 0 && ui.customSteps[pid]) {
-    ui.customSteps[pid].splice(ci, 1);
-    if (ui.checked[pid]) {
-      const nc = {};
-      Object.keys(ui.checked[pid]).forEach(k => {
-        const ki = parseInt(k);
-        if (ki < i) nc[ki] = ui.checked[pid][k];
-        else if (ki > i) nc[ki - 1] = ui.checked[pid][k];
-      });
-      ui.checked[pid] = nc;
-    }
-    saveData();
-    render();
+  if (i < baseLen) {
+    p.steps.splice(i, 1);
+  } else {
+    const ci = i - baseLen;
+    if (ui.customSteps[pid]) ui.customSteps[pid].splice(ci, 1);
   }
+  if (ui.checked[pid]) {
+    const nc = {};
+    Object.keys(ui.checked[pid]).forEach(k => {
+      const ki = parseInt(k);
+      if (ki < i) nc[ki] = ui.checked[pid][k];
+      else if (ki > i) nc[ki - 1] = ui.checked[pid][k];
+    });
+    ui.checked[pid] = nc;
+  }
+  saveData();
+  render();
 }
 
 function progressRing(pct, size) {
@@ -794,11 +841,10 @@ function render() {
 
     let stepsHtml = steps.map((s, i) => {
       const chk = isChecked(p.id, i);
-      const isCustom = i >= p.steps.length;
       return '<div class="step' + (chk ? ' done' : '') + '">' +
         '<input type="checkbox" ' + (chk ? 'checked' : '') + ' onchange="toggleCheck(\'' + p.id + '\',' + i + ')">' +
         '<span class="step-text">' + s + '</span>' +
-        (isCustom ? '<button class="step-remove" onclick="removeStep(\'' + p.id + '\',' + i + ')" title="Remove">×</button>' : '') +
+        '<button class="step-remove" onclick="removeStep(\'' + p.id + '\',' + i + ')" title="Remove step">×</button>' +
         '</div>';
     }).join('');
 
@@ -819,6 +865,7 @@ function render() {
     h += '<span class="badge ' + getStatusBadge(p.status) + '">' + p.status + '</span>';
     h += '<span class="badge ' + getPriorityBadge(p.priority) + '">' + p.priority + '</span>';
     h += '<button class="edit-btn" onclick="event.stopPropagation();openEditModal(\'' + p.id + '\')" title="Edit project">✏️</button>';
+    h += '<button class="del-btn" onclick="event.stopPropagation();quickDeleteProject(\'' + p.id + '\')" title="Delete project">🗑️</button>';
     h += '<span class="arrow' + (open ? ' open' : '') + '">▼</span>';
     h += '</div></div>';
 
@@ -860,11 +907,12 @@ function render() {
   sopData.forEach((s, si) => {
     let docsHtml = '';
     if (s.documents && s.documents.length) {
-      docsHtml = s.documents.map(d => {
+      docsHtml = s.documents.map((d, di) => {
         let extras = '';
         if (d.category) extras += '<span class="sop-doc-cat">' + d.category + '</span>';
         if (d.owner) extras += '<span class="sop-doc-owner">' + d.owner + '</span>';
         if (d.url) extras += '<a class="sop-doc-link" href="' + d.url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open →</a>';
+        extras += '<button class="del-btn" onclick="event.stopPropagation();removeSopDoc(' + si + ',' + di + ')" title="Remove document">×</button>';
         return '<div class="sop-doc"><span class="sop-doc-name">• ' + d.name + '</span>' + extras + '</div>';
       }).join('');
     }
@@ -875,9 +923,23 @@ function render() {
           '<div class="sop-ct">' + s.count + '</div>' +
           '<div class="sop-info"><div class="sop-name">' + s.name + '</div><div class="sop-desc">' + s.description + '</div></div>' +
           sheetLink +
+          '<button class="del-btn" onclick="event.stopPropagation();removeSopCategory(' + si + ')" title="Delete category">🗑️</button>' +
           '<span class="sop-arrow" id="sop-arrow-' + si + '">▼</span>' +
         '</div>' +
         '<div class="sop-docs" id="sop-docs-' + si + '"><div class="sop-doc-list">' + docsHtml + '</div></div>' +
+      '</div>';
+  });
+
+  const mc = document.getElementById('sopMappingCards');
+  mc.innerHTML = '';
+  const styleClasses = ['m1','m2','m3','m4','m5','m6'];
+  sopMappings.forEach((m, mi) => {
+    const sc = m.style || styleClasses[mi % styleClasses.length];
+    const items = (m.items || []).map(it => '• ' + it).join('<br>');
+    mc.innerHTML +=
+      '<div class="sop-map-card sop-' + sc + '" style="position:relative">' +
+        '<button class="del-btn" onclick="removeSopMapping(' + mi + ')" title="Delete mapping" style="position:absolute;top:8px;right:8px">×</button>' +
+        '<h4>' + m.title + '</h4>' + items +
       '</div>';
   });
 

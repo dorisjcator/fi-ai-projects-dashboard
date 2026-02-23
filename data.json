@@ -363,5 +363,13 @@
       ]
     }
   ],
+  "sopMappings": [
+    {"title": "UAR Agent touches:", "style": "m1", "items": ["11 UAR templates (all fraud types)", "UAR Desktop Guide + Reconciliation Guide", "UAR Scorecards (Standard + Experienced)", "Exposure Calculation workbook", "FY26 UAR tracker (Quick Links)"]},
+    {"title": "Bank Email Agent touches:", "style": "m2", "items": ["Bank Emails Desktop Guide", "Bank Email Scorecard", "ACH Response Macros", "Bank Email Tracker (Quick Links)", "Banking Contacts (Quick Links)", "Gumloop extraction macro (AI Tooling)"]},
+    {"title": "🟣 FI GPT — USES ENTIRE SOP HOUSE:", "style": "m3", "items": ["ALL 18 templates", "ALL 11 communication macros", "ALL 15 desktop guides", "ALL 13 master scorecards", "Both procedures (QC + Investigations)", "ALL 6 quick links + ALL 7 AI tooling entries", "<strong>72+ documents — the team's AI brain</strong>"]},
+    {"title": "Risk Alert / USR Tracker for QC:", "style": "m4", "items": ["Slack Channel Review DG + Scorecard", "USR Desktop Guide [WIP]", "FI Quality Control Procedure", "All 13 Master Scorecards", "FI Investigations Procedure"]},
+    {"title": "QC Agents (UAR + SFDC):", "style": "m5", "items": ["FI Quality Control Procedure", "All 13 Master Scorecards", "Every Desktop Guide (QC criteria)", "FI Investigations Procedure"]},
+    {"title": "Legal Report Update may touch:", "style": "m6", "items": ["LOI Templates (Chase/PNC + DocuSign)", "LOI Scorecard", "AML/EDD Internal Referral templates", "Referral fraud detection report"]}
+  ],
   "rationale": "SF Ticket Assigner is live ✅. UAR Agent is P0 — most developed (17 PRs, full SOP) with 30-60 min savings per report. Bank Email Agent is P1 due to 24hr bank SLA pressure. ATO Doc Sub Agent is P1 — Doris & Pinkham actively building 3-output doc pipeline. FI GPT is P2 — standalone knowledge base for all 72+ SOPs. Risk Alert/USR Tracker is P2 for agent accuracy validation. QC agents depend on parent tools being live. Legal Report Update needs scoping."
 }
