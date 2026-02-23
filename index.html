@@ -344,6 +344,8 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
 <script>
 const STATUS_OPTIONS = ['Live','In Development','In Progress','First Draft','Not Started'];
 const PRIORITY_OPTIONS = ['Shipped','P0 - Ship Now','P1 - Next Up','P2 - Build Next','P2 - After Dependencies','P3 - Backlog'];
+const PRIORITY_RANK = {};
+PRIORITY_OPTIONS.forEach((p, i) => { PRIORITY_RANK[p] = i; });
 const COMPLEXITY_OPTIONS = ['Small','Medium','Large','Unknown'];
 const STORAGE_KEY = 'fi-dash-v2';
 const DEFAULT_ICONS = {'Live':'✅','In Development':'🔨','In Progress':'🔨','First Draft':'📝','Not Started':'⬜'};
@@ -384,6 +386,14 @@ function getProgress(p) {
   s.forEach((_,i) => { if (isChecked(p.id,i)) d++; });
   return Math.round(d/s.length*100);
 }
+function sortProjects() {
+  projects.sort((a, b) => {
+    const ra = PRIORITY_RANK[a.priority] ?? 99;
+    const rb = PRIORITY_RANK[b.priority] ?? 99;
+    return ra - rb;
+  });
+}
+
 function generateId(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'') + '-' + Date.now().toString(36);
 }
@@ -465,6 +475,7 @@ async function loadData() {
               sopMappings = data.sopMappings || [];
             }
           }
+          sortProjects();
           render();
           saveData();
           document.getElementById('lastSaved').textContent = '✅ Loaded from saved data';
@@ -493,6 +504,7 @@ async function loadDefaults() {
     rationale = '';
   }
   ui = {checked:{}, notes:{}, customSteps:{}};
+  sortProjects();
   saveData();
   render();
 }
@@ -771,6 +783,7 @@ function saveModal() {
       showToast('✅ Changes saved!');
     }
   }
+  sortProjects();
   saveData();
   closeModal();
   render();
