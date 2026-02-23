@@ -232,14 +232,136 @@
       ]
     }
   ],
+  "sopSheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit",
   "sopData": [
-    {"name": "Templates", "count": 18, "description": "UAR templates (11 types), trackers, LOI templates, internal referrals"},
-    {"name": "Communication Macros", "count": 11, "description": "Customer/bank comms: LOIs, BEC, ATO, phishing, disputes, bank emails"},
-    {"name": "Quick Links", "count": 6, "description": "UAR tracker, banking contacts, BEC tracker, bank email tracker, rotations, referrals"},
-    {"name": "Desktop Guides", "count": 15, "description": "Full coverage: ATO, BEC, bank emails, USRs [WIP], UARs, suspicious activity, etc."},
-    {"name": "Master Scorecards", "count": 13, "description": "QC rubrics for every investigation type + naming conventions"},
-    {"name": "Procedures", "count": 2, "description": "FI Quality Control Procedure, FI Investigations Procedure"},
-    {"name": "AI Tooling", "count": 7, "description": "Bank Email Gumloop, SF Ticket Assigner, USR/ATO/Phishing agents, Symphony AI"}
+    {
+      "name": "Templates",
+      "count": 18,
+      "description": "UAR templates (11 types), trackers, LOI templates, internal referrals",
+      "sheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit#gid=0",
+      "documents": [
+        {"name": "BEC UAR Language Template", "category": "BEC / UAR"},
+        {"name": "ATO Template", "category": "ATO / UAR"},
+        {"name": "Fraud UAR Template — Identity Theft", "category": "Identity Theft / UAR"},
+        {"name": "Fraud UAR Template — True Party", "category": "True Party / UAR"},
+        {"name": "Rogue Admin Template", "category": "Rogue Admin / UAR"},
+        {"name": "Bulk Fraud UAR Template — True Party", "category": "Bulk True Party / UAR"},
+        {"name": "Bulk Fraud UAR Template — Identity Theft", "category": "Bulk Identity Theft / UAR"},
+        {"name": "UAR Exposure Workbook", "category": "Exposure Calculation / UAR"},
+        {"name": "Phishing Site Template", "category": "Phishing Site / UAR"},
+        {"name": "Bulk BEC UAR Template", "category": "Bulk BEC / UAR"},
+        {"name": "Internal Employee Fraud Template", "category": "Internal Employee Fraud / UAR"},
+        {"name": "Phishing Site Tracker Template", "category": "Phishing Site / Tracker"},
+        {"name": "Daily BEC Report Template", "category": "BEC / Tracker"},
+        {"name": "Internal Referral for AML", "category": "AML Suspicious Activity / Internal Referral"},
+        {"name": "Internal Referral for EDD", "category": "EDD / Internal Referral"},
+        {"name": "LOI Template (Chase/PNC)", "category": "LOIs"},
+        {"name": "JPMC LOI Template (DocuSign)", "category": "LOIs / Chase DocuSign"},
+        {"name": "Fraud UAR Template — Known Subject ID Theft", "category": "Known Subject / UAR"}
+      ]
+    },
+    {
+      "name": "Communication Macros",
+      "count": 11,
+      "description": "Customer/bank comms: LOIs, BEC, ATO, phishing, disputes, bank emails",
+      "sheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit#gid=514098349",
+      "documents": [
+        {"name": "Bad Account Notification to Bene Banks", "category": "LOIs / Bene Bank Notification"},
+        {"name": "Security Case Update Template", "category": "LOIs / Communication to Customer"},
+        {"name": "Notification of BEC to Customers Template", "category": "BEC / Communication to Customer"},
+        {"name": "Phishing Emails / Survey Email", "category": "Phishing Emails / Communication to Customer"},
+        {"name": "Phishing Site Communication", "category": "Phishing Site / Communication to Customer"},
+        {"name": "Business Dispute", "category": "Business Dispute / Communication to Customer"},
+        {"name": "Alert 1477 ATO Communication", "category": "ATOs / ATO Communication"},
+        {"name": "BEC and Phishing CX Macro Responses", "category": "Phishing/BEC / CX Macro Responses"},
+        {"name": "Rejected Company: Termination of Gusto Services", "category": "Rejected Company / FI Macro"},
+        {"name": "Suspicious Activity Communication", "category": "Suspicious Activity / Communication to Customer"},
+        {"name": "ACH Rejected Transaction — Email Response Macros", "category": "Bank Emails / Communication to Banking Partner"}
+      ]
+    },
+    {
+      "name": "Quick Links",
+      "count": 6,
+      "description": "UAR tracker, banking contacts, BEC tracker, bank email tracker, rotations, referrals",
+      "sheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit#gid=1086902810",
+      "documents": [
+        {"name": "FY26 Fraud Investigations UARs"},
+        {"name": "Banking Contacts"},
+        {"name": "Daily BEC Report (Current)"},
+        {"name": "Bank Emails 2026"},
+        {"name": "FI Rotations"},
+        {"name": "Referral Fraud Detection Report"}
+      ]
+    },
+    {
+      "name": "Desktop Guides",
+      "count": 15,
+      "description": "Full coverage: ATO, BEC, bank emails, USRs [WIP], UARs, suspicious activity, etc.",
+      "sheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit#gid=1487993603",
+      "documents": [
+        {"name": "Desktop Guide: Account Access"},
+        {"name": "Desktop Guide: Admin Changes and Business Disputes"},
+        {"name": "Responding to Bank Emails Desktop Guide"},
+        {"name": "Freeze Request Desktop Guide"},
+        {"name": "Internal Referral Desktop Guide"},
+        {"name": "Account Takeover (ATO) Desktop Guide"},
+        {"name": "Business Email Compromise Desktop Guide"},
+        {"name": "Desktop Guide: Issue and Respond to LOIs"},
+        {"name": "Navigating Unaffiliated Reports & Fraud Desktop Guide"},
+        {"name": "Rogue Admin & Embezzlement Desktop Guide"},
+        {"name": "Slack Channel Review Desktop Guide"},
+        {"name": "Suspicious Activity Desktop Guide"},
+        {"name": "Desktop Guide: UAR Reconciliation"},
+        {"name": "Desktop Guide: Unusual Activity Reports"},
+        {"name": "[WIP] Desktop Guide: User Session Reviews"}
+      ]
+    },
+    {
+      "name": "Master Scorecards",
+      "count": 13,
+      "description": "QC rubrics for every investigation type + naming conventions",
+      "sheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit#gid=238655536",
+      "documents": [
+        {"name": "Account Access Scorecard"},
+        {"name": "Admin Changes and Business Disputes Scorecard"},
+        {"name": "Bank Email Scorecard"},
+        {"name": "Internal Referral Scorecard"},
+        {"name": "Account Takeover (ATO) Scorecard"},
+        {"name": "BEC Scorecard"},
+        {"name": "Unaffiliated Reports & Fraud Scorecard"},
+        {"name": "Letter of Indemnity (LOI) Scorecard"},
+        {"name": "Rogue Admin and Embezzlement Scorecard"},
+        {"name": "Slack Channel Scorecard"},
+        {"name": "Suspicious Activity Scorecard"},
+        {"name": "Experienced UAR Scorecard"},
+        {"name": "UAR Scorecard"}
+      ]
+    },
+    {
+      "name": "Procedures",
+      "count": 2,
+      "description": "FI Quality Control Procedure, FI Investigations Procedure",
+      "sheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit#gid=2018516845",
+      "documents": [
+        {"name": "Fraud Investigations Quality Control Procedure"},
+        {"name": "Fraud Investigations Procedure"}
+      ]
+    },
+    {
+      "name": "AI Tooling",
+      "count": 7,
+      "description": "Bank Email Gumloop, SF Ticket Assigner, USR/ATO/Phishing agents, Symphony AI",
+      "sheetUrl": "https://docs.google.com/spreadsheets/d/18eVDWskGaL8QYuxnTOmARgfPpstM7HBpTnXf1uDnOdY/edit#gid=2070123525",
+      "documents": [
+        {"name": "Bank Emails (Gumloop)", "owner": "Doris", "url": "https://gusto.gumloop.com/pipeline?workbook_id=9gCPJbz1KpfqaXmBMQLEVV"},
+        {"name": "Sub ATO Document Agent", "owner": "Doris"},
+        {"name": "USR ATO Agent", "owner": "Jessie"},
+        {"name": "Investigations Sub ATO Agent", "owner": "Jessie"},
+        {"name": "Symphony AI", "owner": "Iain"},
+        {"name": "Phishing Sub ATO Agent", "owner": "Iain"},
+        {"name": "Salesforce Ticket Assigner (Gumloop)", "owner": "Doris", "url": "https://gusto.gumloop.com/flows?folder_id=jnb4TnZ4xguTTmpyNitP2o"}
+      ]
+    }
   ],
   "rationale": "SF Ticket Assigner is live ✅. UAR Agent is P0 — most developed (17 PRs, full SOP) with 30-60 min savings per report. Bank Email Agent is P1 due to 24hr bank SLA pressure. ATO Doc Sub Agent is P1 — Doris & Pinkham actively building 3-output doc pipeline. FI GPT is P2 — standalone knowledge base for all 72+ SOPs. Risk Alert/USR Tracker is P2 for agent accuracy validation. QC agents depend on parent tools being live. Legal Report Update needs scoping."
 }

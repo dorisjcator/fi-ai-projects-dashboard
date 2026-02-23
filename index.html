@@ -173,12 +173,32 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
 .dep-hl { color:var(--purple); font-weight:700; }
 .dep-live { color:var(--green); font-weight:600; }
 
-.sop-sheet { display:flex; align-items:center; gap:20px; padding:16px 20px; background:var(--coral-bg); border-radius:12px; border:1px solid var(--border); margin-bottom:12px; transition:all 0.2s; }
+.storage-warn { background:#FEF2F2; border:1px solid #FECACA; color:#991B1B; padding:12px 20px; border-radius:12px; margin-bottom:16px; font-size:13px; display:flex; align-items:center; gap:10px; }
+.storage-warn strong { font-weight:700; }
+.storage-ok { background:var(--green-bg); border:1px solid var(--green-border); color:#065F46; padding:8px 16px; border-radius:8px; font-size:12px; display:none; align-items:center; gap:6px; margin-bottom:16px; }
+.sop-sheet { border-radius:12px; border:1px solid var(--border); margin-bottom:12px; transition:all 0.2s; overflow:hidden; }
 .sop-sheet:hover { border-color:var(--coral-lighter); box-shadow:var(--shadow-sm); }
+.sop-hdr { display:flex; align-items:center; gap:20px; padding:16px 20px; background:var(--coral-bg); cursor:pointer; }
 .sop-ct { background:linear-gradient(135deg, var(--coral), var(--coral-light)); color:white; border-radius:12px; padding:8px 14px; font-weight:800; font-size:20px; min-width:52px; text-align:center; }
 .sop-info { flex:1; }
 .sop-name { font-weight:700; font-size:15px; color:var(--text); }
 .sop-desc { font-size:13px; color:var(--text-secondary); margin-top:2px; }
+.sop-link-btn { background:var(--coral); color:white; border:none; border-radius:8px; padding:6px 12px; font-size:11px; font-weight:600; cursor:pointer; text-decoration:none; white-space:nowrap; transition:all 0.2s; }
+.sop-link-btn:hover { background:var(--coral-dark); }
+.sop-arrow { font-size:12px; color:var(--text-secondary); transition:transform 0.2s; }
+.sop-arrow.open { transform:rotate(180deg); }
+.sop-docs { max-height:0; overflow:hidden; transition:max-height 0.3s ease; background:white; }
+.sop-docs.open { max-height:2000px; }
+.sop-doc-list { padding:12px 20px 16px; }
+.sop-doc { display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.sop-doc:last-child { border-bottom:none; }
+.sop-doc-name { flex:1; color:var(--text); }
+.sop-doc-cat { font-size:11px; color:var(--text-muted); background:var(--gray-bg); padding:2px 8px; border-radius:4px; }
+.sop-doc-owner { font-size:11px; color:var(--purple); background:var(--purple-bg); padding:2px 8px; border-radius:4px; }
+.sop-doc-link { color:var(--coral); text-decoration:none; font-size:12px; font-weight:600; }
+.sop-doc-link:hover { text-decoration:underline; }
+.sop-master-btn { display:inline-flex; align-items:center; gap:8px; background:linear-gradient(135deg, var(--coral), var(--coral-light)); color:white; border:none; border-radius:10px; padding:10px 20px; font-size:14px; font-weight:700; cursor:pointer; text-decoration:none; transition:all 0.2s; margin-bottom:20px; box-shadow:var(--shadow-coral); }
+.sop-master-btn:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(255,107,80,0.3); }
 
 .sop-mapping { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
 .sop-map-card { padding:20px; border-radius:12px; font-size:13px; line-height:1.8; }
@@ -262,6 +282,11 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
   </div>
 </div>
 
+<div id="storageWarn" class="storage-warn" style="display:none">
+  <span>⚠️</span>
+  <div><strong>Your browser can't save changes.</strong> This can happen in private/incognito mode or with strict privacy settings. Use the Export button to save your work as a file you can Import later.</div>
+</div>
+
 <header class="header">
   <div class="header-inner">
     <div>
@@ -302,7 +327,8 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
 <div id="tabSop" class="hidden">
   <div class="card">
     <h3>FI's Procedures, Desktop Guides, and Templates</h3>
-    <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px">7 sheets — your team's operational knowledge base</p>
+    <p style="color:var(--text-secondary);font-size:14px;margin-bottom:20px">7 sheets — your team's operational knowledge base. Click any category to see all documents.</p>
+    <a id="masterSheetBtn" class="sop-master-btn" href="#" target="_blank" rel="noopener">📊 Open Master SOP Google Sheet</a>
     <div id="sopSheets"></div>
   </div>
   <div class="card">
@@ -327,11 +353,13 @@ const DEFAULT_ICONS = {'Live':'✅','In Development':'🔨','In Progress':'🔨'
 
 let projects = [];
 let sopData = [];
+let sopSheetUrl = '';
 let rationale = '';
 let ui = {checked:{}, notes:{}, customSteps:{}};
 let currentFilter = 'all';
 let selectedId = null;
 let editingId = null;
+let storageAvailable = false;
 
 function getCategory(status) {
   if (status === 'Live') return 'live';
@@ -368,24 +396,80 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+function testStorage() {
+  try {
+    const testKey = '__storage_test__';
+    localStorage.setItem(testKey, 'ok');
+    const result = localStorage.getItem(testKey);
+    localStorage.removeItem(testKey);
+    if (result === 'ok') {
+      storageAvailable = true;
+      document.getElementById('storageWarn').style.display = 'none';
+      return true;
+    }
+  } catch(e) {}
+  storageAvailable = false;
+  document.getElementById('storageWarn').style.display = 'flex';
+  return false;
+}
+
 function saveData() {
-  const data = { projects, sopData, rationale, ui, version: 2 };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  const ts = new Date().toLocaleString();
-  document.getElementById('lastSaved').textContent = 'Auto-saved: ' + ts;
+  if (!storageAvailable) {
+    document.getElementById('lastSaved').textContent = '⚠️ Storage unavailable — use Export to save';
+    document.getElementById('lastSaved').style.color = '#FECACA';
+    return false;
+  }
+  try {
+    const data = { projects, sopData, sopSheetUrl, rationale, ui, version: 3 };
+    const json = JSON.stringify(data);
+    localStorage.setItem(STORAGE_KEY, json);
+    const verify = localStorage.getItem(STORAGE_KEY);
+    if (!verify || verify.length < 10) {
+      throw new Error('Save verification failed');
+    }
+    const ts = new Date().toLocaleString();
+    document.getElementById('lastSaved').textContent = '✅ Auto-saved: ' + ts;
+    document.getElementById('lastSaved').style.color = '';
+    return true;
+  } catch(e) {
+    document.getElementById('lastSaved').textContent = '❌ Save failed — use Export to back up';
+    document.getElementById('lastSaved').style.color = '#FECACA';
+    showToast('❌ Could not save — try Export to back up your data');
+    return false;
+  }
 }
 
 async function loadData() {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored) {
+  testStorage();
+  if (storageAvailable) {
     try {
-      const data = JSON.parse(stored);
-      projects = data.projects || [];
-      sopData = data.sopData || [];
-      rationale = data.rationale || '';
-      ui = data.ui || {checked:{}, notes:{}, customSteps:{}};
-      render();
-      return;
+      const stored = localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const data = JSON.parse(stored);
+        if (data.projects && data.projects.length > 0) {
+          projects = data.projects;
+          rationale = data.rationale || '';
+          ui = data.ui || {checked:{}, notes:{}, customSteps:{}};
+          if (data.version >= 3 && data.sopData && data.sopData.length && data.sopData[0].documents) {
+            sopData = data.sopData;
+            sopSheetUrl = data.sopSheetUrl || '';
+          } else {
+            try {
+              const resp = await fetch('data.json?v=' + Date.now());
+              const fresh = await resp.json();
+              sopData = fresh.sopData || [];
+              sopSheetUrl = fresh.sopSheetUrl || '';
+            } catch(e) {
+              sopData = data.sopData || [];
+              sopSheetUrl = data.sopSheetUrl || '';
+            }
+          }
+          render();
+          saveData();
+          document.getElementById('lastSaved').textContent = '✅ Loaded from saved data';
+          return;
+        }
+      }
     } catch(e) { /* fall through to defaults */ }
   }
   await loadDefaults();
@@ -393,14 +477,16 @@ async function loadData() {
 
 async function loadDefaults() {
   try {
-    const resp = await fetch('data.json');
+    const resp = await fetch('data.json?v=' + Date.now());
     const data = await resp.json();
     projects = data.projects || [];
     sopData = data.sopData || [];
+    sopSheetUrl = data.sopSheetUrl || '';
     rationale = data.rationale || '';
   } catch(e) {
     projects = [];
     sopData = [];
+    sopSheetUrl = '';
     rationale = '';
   }
   ui = {checked:{}, notes:{}, customSteps:{}};
@@ -410,13 +496,15 @@ async function loadDefaults() {
 
 async function resetData() {
   if (!confirm('Reset all changes and reload original data? Your edits, notes, and progress will be cleared.')) return;
-  localStorage.removeItem(STORAGE_KEY);
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
   await loadDefaults();
   showToast('🔄 Reset to defaults!');
 }
 
+setInterval(function() { if (storageAvailable && projects.length > 0) saveData(); }, 30000);
+
 function exportData() {
-  const data = { projects, sopData, rationale, ui, exportedAt: new Date().toISOString(), version: 2 };
+  const data = { projects, sopData, sopSheetUrl, rationale, ui, exportedAt: new Date().toISOString(), version: 3 };
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -436,6 +524,7 @@ function importData(e) {
       const data = JSON.parse(ev.target.result);
       projects = data.projects || projects;
       sopData = data.sopData || sopData;
+      sopSheetUrl = data.sopSheetUrl || sopSheetUrl;
       rationale = data.rationale || rationale;
       ui = data.ui || ui;
       saveData();
@@ -462,6 +551,13 @@ function setFilter(f) {
 function toggleCard(id) {
   selectedId = selectedId === id ? null : id;
   render();
+}
+
+function toggleSopDocs(idx) {
+  const docs = document.getElementById('sop-docs-' + idx);
+  const arrow = document.getElementById('sop-arrow-' + idx);
+  if (docs) { docs.classList.toggle('open'); }
+  if (arrow) { arrow.classList.toggle('open'); }
 }
 
 function toggleCheck(pid, i) {
@@ -755,10 +851,34 @@ function render() {
     pc.appendChild(card);
   });
 
+  const msBtn = document.getElementById('masterSheetBtn');
+  if (sopSheetUrl) { msBtn.href = sopSheetUrl; msBtn.style.display = ''; }
+  else { msBtn.style.display = 'none'; }
+
   const ss = document.getElementById('sopSheets');
   ss.innerHTML = '';
-  sopData.forEach(s => {
-    ss.innerHTML += '<div class="sop-sheet"><div class="sop-ct">' + s.count + '</div><div class="sop-info"><div class="sop-name">' + s.name + '</div><div class="sop-desc">' + s.description + '</div></div></div>';
+  sopData.forEach((s, si) => {
+    let docsHtml = '';
+    if (s.documents && s.documents.length) {
+      docsHtml = s.documents.map(d => {
+        let extras = '';
+        if (d.category) extras += '<span class="sop-doc-cat">' + d.category + '</span>';
+        if (d.owner) extras += '<span class="sop-doc-owner">' + d.owner + '</span>';
+        if (d.url) extras += '<a class="sop-doc-link" href="' + d.url + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">Open →</a>';
+        return '<div class="sop-doc"><span class="sop-doc-name">• ' + d.name + '</span>' + extras + '</div>';
+      }).join('');
+    }
+    const sheetLink = s.sheetUrl ? '<a class="sop-link-btn" href="' + s.sheetUrl + '" target="_blank" rel="noopener" onclick="event.stopPropagation()">View Sheet</a>' : '';
+    ss.innerHTML +=
+      '<div class="sop-sheet">' +
+        '<div class="sop-hdr" onclick="toggleSopDocs(' + si + ')">' +
+          '<div class="sop-ct">' + s.count + '</div>' +
+          '<div class="sop-info"><div class="sop-name">' + s.name + '</div><div class="sop-desc">' + s.description + '</div></div>' +
+          sheetLink +
+          '<span class="sop-arrow" id="sop-arrow-' + si + '">▼</span>' +
+        '</div>' +
+        '<div class="sop-docs" id="sop-docs-' + si + '"><div class="sop-doc-list">' + docsHtml + '</div></div>' +
+      '</div>';
   });
 
   document.getElementById('depMap').innerHTML =
