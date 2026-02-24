@@ -318,7 +318,6 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
   <div class="card">
     <h3>📋 Recommended Priority Order</h3>
     <div class="pri-bar" id="priBar"></div>
-    <div class="rationale" id="rationaleBox"></div>
   </div>
   <div id="projectCards"></div>
   <button class="add-project-btn" onclick="openAddModal()">+ Add New Project</button>
@@ -840,7 +839,6 @@ function render() {
     pb.appendChild(d);
   });
 
-  document.getElementById('rationaleBox').textContent = rationale;
 
   const pc = document.getElementById('projectCards');
   pc.innerHTML = '';
