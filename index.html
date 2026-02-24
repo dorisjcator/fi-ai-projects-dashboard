@@ -250,15 +250,68 @@ body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--
 .hidden { display:none !important; }
 
 @media(max-width:768px) {
-  body { padding:12px; }
-  .header { padding:20px 24px; border-radius:16px; }
-  .header h1 { font-size:22px; }
-  .stats { grid-template-columns:repeat(2,1fr); gap:12px; }
-  .det-grid, .sop-mapping { grid-template-columns:1fr; }
-  .pc-right { flex-wrap:wrap; }
+  body { padding:10px; }
+  .header { padding:18px 16px; border-radius:14px; margin-bottom:16px; }
+  .header h1 { font-size:20px; }
+  .header .subtitle { font-size:12px; }
+  .header-inner { flex-direction:column; align-items:flex-start; gap:12px; }
+  .header-actions { width:100%; justify-content:flex-start; }
+  .header-actions .btn { padding:8px 12px; font-size:12px; }
+  .tabs { gap:6px; margin-bottom:16px; }
+  .tab { padding:10px 14px; font-size:13px; flex:1; text-align:center; }
+  .stats { grid-template-columns:repeat(2,1fr); gap:10px; margin-bottom:16px; }
+  .stat { padding:14px 16px; border-radius:12px; }
+  .stat-n { font-size:24px; }
+  .stat-l { font-size:11px; }
+  .filters { gap:6px; margin-bottom:16px; }
+  .filter-pill { padding:6px 12px; font-size:12px; }
+  .card { padding:16px; border-radius:14px; margin-bottom:14px; }
+  .card h3 { font-size:16px; margin-bottom:12px; }
+  .pri-bar { flex-direction:column; gap:6px; }
+  .pri-item { min-width:unset; padding:8px 12px; }
+  .pri-name { font-size:11px; }
+  .pri-label { font-size:9px; }
+  .pc { margin-bottom:12px; border-radius:14px; }
+  .pc-hdr { padding:14px 12px; flex-wrap:wrap; gap:8px; }
+  .pc-left { gap:10px; }
+  .pc-icon { font-size:18px; }
+  .pc-title { font-size:14px; }
+  .pc-desc { font-size:12px; }
+  .pc-right { margin-left:0; width:100%; justify-content:flex-start; gap:6px; }
+  .pc-progress { margin-right:4px; }
+  .badge { padding:4px 8px; font-size:10px; }
+  .edit-btn, .del-btn { font-size:14px !important; padding:4px !important; }
+  .pc-det { padding:14px 12px; }
+  .det-grid { grid-template-columns:1fr; gap:10px; }
+  .det-lbl { font-size:10px; }
+  .det-val { font-size:12px; }
+  .step { gap:8px; padding:8px 0; font-size:12px; }
+  .step input[type=checkbox] { width:18px; height:18px; }
+  .add-step input { padding:8px 10px; font-size:12px; }
+  .add-step button { padding:8px 14px; font-size:12px; }
+  .notes-section { padding:12px 14px; }
+  .notes-area { font-size:12px; min-height:60px; }
+  .sop-hdr { padding:12px 14px; gap:12px; }
+  .sop-ct { font-size:16px; padding:6px 10px; min-width:42px; }
+  .sop-name { font-size:13px; }
+  .sop-desc { font-size:11px; }
+  .sop-link-btn { padding:4px 8px; font-size:10px; }
+  .sop-doc { font-size:12px; flex-wrap:wrap; gap:6px; }
+  .sop-doc-cat, .sop-doc-owner { font-size:10px; }
+  .sop-mapping { grid-template-columns:1fr; gap:12px; }
+  .sop-map-card { padding:14px; font-size:12px; }
+  .sop-master-btn { padding:8px 16px; font-size:13px; }
+  .dep-map { font-size:12px; }
+  .modal-overlay { padding:8px; }
+  .modal { max-height:95vh; border-radius:14px; width:100%; }
+  .modal-header { padding:14px 16px; }
+  .modal-body { padding:16px; }
+  .modal-footer { padding:14px 16px; flex-wrap:wrap; gap:8px; }
   .form-row.cols-2, .form-row.cols-3 { grid-template-columns:1fr; }
-  .modal { max-height:95vh; border-radius:16px; }
-  .pri-bar { flex-direction:column; }
+  .form-input, .form-select, .form-textarea { font-size:14px; padding:10px 12px; }
+  .storage-warn { padding:10px 14px; font-size:12px; }
+  .add-project-btn { font-size:13px; padding:12px; }
+  .sop-box { padding:12px 14px; }
 }
 </style>
 </head>
