@@ -399,6 +399,11 @@ const PRIORITY_OPTIONS = ['Shipped','P0 - Ship Now','P1 - Next Up','P2 - Build N
 const PRIORITY_RANK = {};
 PRIORITY_OPTIONS.forEach((p, i) => { PRIORITY_RANK[p] = i; });
 const COMPLEXITY_OPTIONS = ['Small','Medium','Large','Unknown'];
+const QUARTER_OPTIONS = [
+  '', 'FY25 Q1 (May–Jul 2024)', 'FY25 Q2 (Aug–Oct 2024)', 'FY25 Q3 (Nov 2024–Jan 2025)', 'FY25 Q4 (Feb–Apr 2025)',
+  'FY26 Q1 (May–Jul 2025)', 'FY26 Q2 (Aug–Oct 2025)', 'FY26 Q3 (Nov 2025–Jan 2026)', 'FY26 Q4 (Feb–Apr 2026)',
+  'FY27 Q1 (May–Jul 2026)', 'FY27 Q2 (Aug–Oct 2026)', 'FY27 Q3 (Nov 2026–Jan 2027)', 'FY27 Q4 (Feb–Apr 2027)'
+];
 const STORAGE_KEY = 'fi-dash-v2';
 const DEFAULT_ICONS = {'Live':'✅','In Development':'🔨','In Progress':'🔨','First Draft':'📝','Not Started':'⬜'};
 
@@ -751,7 +756,7 @@ function openAddModal() {
     id:'', name:'', status:'Not Started', priority:'P3 - Backlog', icon:'⬜',
     team:'', platform:'TBD', llm:'TBD', description:'', impact:'',
     blockers:'', dependencies:'', documentation:'', metrics:'',
-    complexity:'Unknown', sopCoverage:'', usesFullSop:false, steps:[]
+    complexity:'Unknown', sopCoverage:'', usesFullSop:false, completedQuarter:'', steps:[]
   });
   document.getElementById('modalOverlay').classList.add('open');
 }
@@ -765,16 +770,20 @@ function renderModalForm(p) {
   const statusOpts = STATUS_OPTIONS.map(s => '<option value="'+s+'"'+(s===p.status?' selected':'')+'>'+s+'</option>').join('');
   const priOpts = PRIORITY_OPTIONS.map(s => '<option value="'+s+'"'+(s===p.priority?' selected':'')+'>'+s+'</option>').join('');
   const cxOpts = COMPLEXITY_OPTIONS.map(s => '<option value="'+s+'"'+(s===p.complexity?' selected':'')+'>'+s+'</option>').join('');
+  const qOpts = QUARTER_OPTIONS.map(q => '<option value="'+q+'"'+(q===(p.completedQuarter||'')?' selected':'')+'>'+(q||'— Not set —')+'</option>').join('');
 
   document.getElementById('modalBody').innerHTML =
     '<div class="form-row cols-3">' +
       '<div class="form-group"><label class="form-label">Icon</label><input id="f-icon" class="form-input form-input-sm" value="'+p.icon+'"></div>' +
       '<div class="form-group" style="grid-column:span 2"><label class="form-label">Project Name</label><input id="f-name" class="form-input" value="'+(p.name||'').replace(/"/g,'&quot;')+'"></div>' +
     '</div>' +
-    '<div class="form-row cols-3">' +
+    '<div class="form-row cols-2">' +
       '<div class="form-group"><label class="form-label">Status</label><select id="f-status" class="form-select">'+statusOpts+'</select></div>' +
       '<div class="form-group"><label class="form-label">Priority</label><select id="f-priority" class="form-select">'+priOpts+'</select></div>' +
+    '</div>' +
+    '<div class="form-row cols-2">' +
       '<div class="form-group"><label class="form-label">Complexity</label><select id="f-complexity" class="form-select">'+cxOpts+'</select></div>' +
+      '<div class="form-group"><label class="form-label">📅 Completed Quarter (for Perf Review)</label><select id="f-quarter" class="form-select">'+qOpts+'</select></div>' +
     '</div>' +
     '<div class="form-row cols-2">' +
       '<div class="form-group"><label class="form-label">Team / DRI</label><input id="f-team" class="form-input" value="'+(p.team||'').replace(/"/g,'&quot;')+'"></div>' +
@@ -820,7 +829,8 @@ function saveModal() {
     documentation: document.getElementById('f-doc').value.trim(),
     metrics: document.getElementById('f-metrics').value.trim(),
     sopCoverage: document.getElementById('f-sop').value.trim(),
-    usesFullSop: document.getElementById('f-fullsop').checked
+    usesFullSop: document.getElementById('f-fullsop').checked,
+    completedQuarter: document.getElementById('f-quarter').value
   };
 
   if (editingId === 'new') {
@@ -936,6 +946,10 @@ function render() {
     h += '<div class="pc-progress">' + progressRing(pct, 36) + '<span class="progress-pct">' + pct + '%</span></div>';
     h += '<span class="badge ' + getStatusBadge(p.status) + '">' + p.status + '</span>';
     h += '<span class="badge ' + getPriorityBadge(p.priority) + '">' + p.priority + '</span>';
+    if (p.completedQuarter) {
+      const qShort = p.completedQuarter.split(' (')[0];
+      h += '<span class="badge" style="background:var(--green-bg);color:#065F46;border:1px solid var(--green-border)">📅 ' + qShort + '</span>';
+    }
     h += '<button class="edit-btn" onclick="event.stopPropagation();openEditModal(\'' + p.id + '\')" title="Edit project">✏️</button>';
     h += '<button class="del-btn" onclick="event.stopPropagation();quickDeleteProject(\'' + p.id + '\')" title="Delete project">🗑️</button>';
     h += '<span class="arrow' + (open ? ' open' : '') + '">▼</span>';
@@ -947,6 +961,9 @@ function render() {
     h += '<div><div class="det-lbl">LLM</div><div class="det-val">' + p.llm + '</div></div>';
     h += '<div><div class="det-lbl">Team / DRI</div><div class="det-val">' + p.team + '</div></div>';
     h += '<div><div class="det-lbl">Complexity</div><div class="det-val">' + p.complexity + '</div></div>';
+    if (p.completedQuarter) {
+      h += '<div class="det-full"><div class="det-lbl">📅 Completed Quarter</div><div class="det-val" style="color:var(--green);font-weight:700">' + p.completedQuarter + '</div></div>';
+    }
     h += '<div class="det-full"><div class="det-lbl">Full Description</div><div class="det-val">' + p.description + '</div></div>';
     h += '<div class="det-full"><div class="' + sopBoxClass + '"><div class="sop-lbl">📚 SOP House Coverage</div><div class="sop-val">' + p.sopCoverage + '</div></div></div>';
     h += '<div><div class="det-lbl">Impact</div><div class="det-val">' + p.impact + '</div></div>';
